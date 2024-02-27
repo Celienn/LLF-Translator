@@ -23,3 +23,5 @@ void addVariable(const vector<string> var){
         variables.push_back(var[i]);
     }
 };
+
+//test
