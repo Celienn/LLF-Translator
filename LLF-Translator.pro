@@ -10,13 +10,19 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    llftranslator.cpp
+    llftranslator.cpp \
+    mainwindow.cpp
 
 HEADERS += \
-    llftranslator.h
+    llftranslator.h \
+    mainwindow.h
 
 FORMS += \
-    llftranslator.ui
+    mainwindow.ui
+
+INCLUDEPATH += "C:/MSFS SDK/SimConnect SDK/include"
+
+LIBS += -L"C:/MSFS SDK/SimConnect SDK/lib" -lSimConnect
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
