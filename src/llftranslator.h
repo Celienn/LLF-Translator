@@ -3,7 +3,10 @@
 
 #include <QWidget>
 #include <string>
-// #include <SimConnect.h>
+#include <vector>
+
+#include <windows.h>
+#include <SimConnect.h>
 
 using namespace std;
 
@@ -15,8 +18,14 @@ class LLFTranslator
         ~LLFTranslator();
         void addVariable(const string &var);
         void addVariable(const vector<string> var);
-
+        bool isConnected() { return connected; };
+        void connect();
+        void readVar();
+        
     private:
         vector<string> variables;
+        bool connected;
+        HANDLE hSimConnect;
+        HRESULT hr;
 };
 #endif // LLFTRANSLATOR_H
