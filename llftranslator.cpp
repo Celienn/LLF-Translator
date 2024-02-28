@@ -20,5 +20,3 @@ void LLFTranslator::addVariable( vector<string> var){
         variables.push_back(var[i]);
     }
 };
-
-//test
