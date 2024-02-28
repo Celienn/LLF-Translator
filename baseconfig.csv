@@ -1,0 +1,361 @@
+# FlightSim configuration file
+# (c)2016-2021 by A. Menu
+
+# ============================================================================
+# Flight Instruments Panel
+# ----------------------------------------------------------------------------
+# Géométrie du panneau d'instruments QFI définie par la position du CSG et les
+# dimensions en pixels.
+# Jusqu'à 4 panneaux sont supportés (FlightSim v0.4 ou +).
+#
+# Les champs 'margin_x' et 'margin_y' sont optionnels (default 0).  Ces marges
+# gauche et haute permettent de décaler tous les QFI sans modification de leur
+# géométrie propre.
+# ----------------------------------------------------------------------------
+# 0         1  2  3      4       5         6
+# QFIPANEL; x; y; width; height; margin_x; margin_y
+# ----------------------------------------------------------------------------
+
+# MBP Desktop (devel)
+QFIPANEL;    0;    0;  1600;  940
+#QFIPANEL;  200;  200;  1024;  730
+QFIPANEL;  200;  200;  1280; 768
+
+# Cellule SA316B
+#QFIPANEL;  0;  0;  1160;  720
+#QFIPANEL;  0;  1051;  1280;  1024
+
+# Beetronics 8VG3 (4:3 - 1024 x 768)
+#QFIPANEL;  0; 1080; 1024; 730
+
+# Beetronics 9TF4 (16:9 ? - 1280 x 768)
+#QFIPANEL;  0; 1000; 1280; 768
+
+#QFIPANEL;  0; 1070; 1346; 756;   23;   8
+
+# ============================================================================
+# Panel Background
+# ----------------------------------------------------------------------------
+# Couleur de fond des panneaux d'instruments (FlightSim v0.4 ou +)
+# note: le fond est transparent par défaut
+# Les proportions r,g, et b sont spécifiées en décimal.
+# ----------------------------------------------------------------------------
+# 0              1  2  3
+# QFIBACKGROUND; r; g; b
+# ----------------------------------------------------------------------------
+
+QFIBACKGROUND; 18; 52; 86	; pour test, équ. à #123456
+#QFIBACKGROUND; 255; 255; 255
+
+# ============================================================================
+# Flight Instruments
+# ----------------------------------------------------------------------------
+# Chaque QFI  est associé à un numéro de module  qui détermine son emplacement
+# théorique sur le panneau ; la géométrie réelle est donnée par les 4 derniers
+# champs. Un numéro de module n'est pas partageable.
+# La classe de l'instrument doit être une classe fille de QamFlightInstrument.
+#
+# Le 'module_id' détermine le panneau de destination (FlightSim v0.4 ou +) :
+# - panneau principal :  1..19
+# - panneau n°2       : 20..29
+# - panneau n°3       : 30..39
+# - panneau n°4       : 40..49
+#
+# Le numéro de module  est celui à utiliser  comme champ 'instrument_id'  pour
+# les connexions de type RREF_QFI, ANA_QFI, TOR_QFI et QFI_TOR.
+#
+# Le champ 7 est optionnel,  il permet de spécifier un pourcentage  minimum de
+# luminosité pour l'instrument (à partir de FlightSim v0.5)
+# ----------------------------------------------------------------------------
+# 0    1          2                    3  4  5      6       7
+# QFI; module_id; class_of_instrument; x; y; width; height; minBrightness
+# ----------------------------------------------------------------------------
+
+QFI; 1;QamAltimeter              	;   20;   20;  360;  360
+QFI; 2;QamVerticalSpeedIndicator 	;  420;   20;  360;  360
+QFI; 3;QamArtificialHorizon      	;  820;   20;  360;  360
+QFI; 4;QamAirSpeedIndicator      	; 1220;   20;  360;  360
+QFI; 5;QamOmniBearingIndicator      	;   20;  420;  360;  360
+QFI; 6;QamChronograph            	;  420;  420;  360;  360
+QFI; 7;QamDirectionalGyro        	;  820;  420;  360;  360
+QFI; 8;QamCollectivePitchIndicator  	; 1220;	 420;  360;  360
+QFI;11;QamTurnCoordinator        	;  820;  820;  360;  100
+
+#QFI;21;QamFuelGauge			;   10;   10;  280;  280
+#QFI;22;QamThermometer			;  734;   10;  280;  280
+#QFI;23;QamVoltmeter			;   10;  440;  280;  280
+#QFI;24;QamOilGauge			;  734;  440;  280;  280
+#QFI;25;QamTachymeter             	;  272;  125;  480;  480
+
+# version Beetronics 9TF4 (res. 1280 x 768)
+
+QFI;21;QamFuelGauge              ;   35;   20;  330;  330
+QFI;22;QamThermometer            ;  925;   20;  330;  330
+QFI;23;QamVoltmeter              ;   35;  415;  330;  330
+QFI;24;QamOilGauge               ;  925;  415;  330;  330
+QFI;25;QamTachymeter             ;  390;  125;  510;  510
+
+# ============================================================================
+# QFI global font pointsize scale factor
+# ----------------------------------------------------------------------------
+# Coefficient multiplicateur à appliquer pour la taille des fontes d'affichage
+# de texte des QamFlightInstruments (FlightSim v0.41 ou +)
+# ----------------------------------------------------------------------------
+# 0             1
+# QFIFONTSCALE; scale
+# ----------------------------------------------------------------------------
+
+#QFIFONTSCALE; 0.8
+
+# ============================================================================
+# X-Plane host
+# ----------------------------------------------------------------------------
+# Adresse IP du poste simulateur X-Plane
+# avec son port de réception et son port utilisé pour l'émission
+# rref_req_period est l'intervalle de temps (en ms) entre deux requètes RREF
+# ce champ est optionnel, il vaut 0 par défaut (à partir de v0.43)
+# ----------------------------------------------------------------------------
+# 0       1           2              3              4
+# XPLANE; ip_address; udp_recv_port; udp_send_port; rref_req_period
+# ----------------------------------------------------------------------------
+
+#XPLANE;localhost;49000;49001
+#XPLANE;192.168.1.26;49000;49001
+XPLANE;192.168.1.95;49000;49001;250
+
+# ============================================================================
+# Modbus over IP Slave List
+# ----------------------------------------------------------------------------
+# 0           1
+# MODIPSLAVE; map_file
+# ----------------------------------------------------------------------------
+
+MODIPSLAVE;llf_fs_slave.csv
+#MODIPSLAVE;llf_fs_slave2.csv
+
+# ============================================================================
+# Modbus Inputs to 'X-Plane DREF' and 'qfi direct links' sampling period (ms)
+# ----------------------------------------------------------------------------
+# Intervalle de temps  entre les actualisations -provoquées  par l'application
+# maître- des entrées Modbus vers les DataRefs et vers les QFI.
+# (associations TOR_DREF, ANA_DREF, TOR_QFI, ANA_QFI et TOR_TOR)
+# ----------------------------------------------------------------------------
+# 0         1
+# PULL_PER; period
+# ----------------------------------------------------------------------------
+
+PULL_PER; 250
+
+# ============================================================================
+# General Application Control
+# ----------------------------------------------------------------------------
+# entrées TOR et/ou ANA  agissant directement sur la configuration générale de
+# l'application. Le commentaire est facultatif.
+# ----------------------------------------------------------------------------
+# 0        1                   2
+# TOR_APP; digital_input_name; comment
+# ----------------------------------------------------------------------------
+# 0        1                  2
+# ANA_APP; analog_input_name; comment
+# ----------------------------------------------------------------------------
+
+ANA_APP; AdjBness; general instrument brightness
+
+# ============================================================================
+# X-Plane Datarefs
+# ----------------------------------------------------------------------------
+# Liste des connexions  entre les DataRefs X-Plane et les grandeurs d'axes des
+# QFI ou les E/S Modbus.
+# Chaque DataRef est identifié par son chemin, les accès en lecture (cmd RREF)
+# sont paramétrés par le champ 'freq'  qui défini le nombre d'échantillons par
+# seconde.
+# Certains DataRefs sont utilisables  en lecture  et  en écriture, ils peuvent
+# apparaître plusieurs fois dans la liste.
+# (cf. Resources/plugins/DataRefs.txt )
+#
+# Les 2 champs  'value_scale' (default 1)  et 'value_offset' (default 0)  sont
+# optionnels.  Ils permettent de mettre en place  le cas échéant  une relation
+# linéaire entre la source et la destination :  dest = source * scale + offset
+# ----------------------------------------------------------------------------
+# 0         1              2        3             4     5            6
+# RREF_QFI; instrument_id; axis_id; dataref_path; freq; value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0         1                       2             3     4            5
+# RREF_TOR; digital_output_name;    dataref_path; freq; value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0         1                       2             3     4            5
+# RREF_ANA; analog_output_name;     dataref_path; freq; value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0         1                       2                   3            4
+# TOR_DREF; digital_input_name;     dataref_path;       value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0         1                       2                   3            4
+# ANA_DREF; analog_input_name;      dataref_path;       value_scale; value_offset
+# ----------------------------------------------------------------------------
+
+# 1: Altimeter
+RREF_QFI; 1; 0; sim/cockpit2/gauges/indicators/altitude_ft_pilot;	10
+
+# 2: VerticalSpeedIndicator
+RREF_QFI; 2; 0; sim/cockpit2/gauges/indicators/vvi_fpm_pilot;		10
+
+# 3: ArtificialHorizon
+RREF_QFI; 3; 0; sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot;	20; -1
+RREF_QFI; 3; 1; sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot;	20
+
+# 4: AirSpeedIndicator
+RREF_QFI; 4; 0; sim/cockpit2/gauges/indicators/airspeed_kts_pilot;	15
+
+# 5: OmniBearingIndicator
+RREF_QFI; 5; 0; sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot;	8; 4
+RREF_QFI; 5; 1; sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot;	8
+RREF_QFI; 5; 2; sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot;	8
+
+# 6: Chronograph
+RREF_QFI; 6; 0; sim/cockpit2/clock_timer/local_time_hours;			 1
+RREF_QFI; 6; 1; sim/cockpit2/clock_timer/local_time_minutes;		 1
+#RREF_QFI; 6; 2; sim/cockpit2/clock_timer/local_time_seconds;		 2
+#RREF_TOR;LedB-6;sim/cockpit2/clock_timer/timer_running;
+
+# 7: DirectionalGyro
+RREF_QFI; 7; 0; sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot;	15
+
+# 8: CollectivePitchIndicator
+RREF_QFI; 8; 0; sim/flightmodel/engine/POINT_pitch_deg[0];			20; 0.1
+RREF_QFI; 8; 1; sim/cockpit2/temperature/outside_air_temp_degc;		20
+RREF_QFI; 8; 2; sim/cockpit2/gauges/indicators/altitude_ft_pilot;	20; 0.3058
+
+# 11: TurnCoordinator
+RREF_QFI;11; 0; sim/cockpit2/gauges/indicators/slip_deg;	18; -1
+
+# 21: FuelGauge
+#RREF_QFI;21; 0; sim/cockpit2/fuel/fuel_quantity;	5; 0.85
+RREF_QFI;21; 0; sim/flightmodel/weight/m_fuel[0];	5; 0.85
+
+# 22: Thermometer
+#RREF_QFI;22; 0; sim/flightmodel/engine/ENGN_EGT_c[0];	5
+RREF_QFI;22; 0; sim/cockpit2/engine/indicators/EGT_deg_C[0];	5
+
+# 23: Voltmeter
+#RREF_QFI;23; 0; sim/cockpit2/electrical/dc_voltmeter_value;		5
+#RREF_QFI;23; 0; sim/flightmodel/engine/ENGN_bat_volt[0];	5
+RREF_QFI;23; 0; sim/cockpit2/electrical/battery_voltage_indicated_volts[0];	5
+
+# 24: OilGauge
+RREF_QFI;24;0; sim/cockpit2/engine/indicators/oil_temperature_deg_C[0];	 5
+RREF_QFI;24;1; sim/cockpit2/engine/indicators/oil_pressure_psi[0]; 		 5; 0.0689
+#RREF_QFI;24;0; sim/flightmodel/engine/ENGN_oil_temp_c[0];	5
+#RREF_QFI;24;1; sim/flightmodel/engine/ENGN_oil_press_psi[0];	5; 0.0689
+
+# 25: Tachymeter
+RREF_QFI;25;0; sim/cockpit2/engine/indicators/engine_speed_rpm[0];	12; 95.7;	0
+RREF_QFI;25;1; sim/cockpit2/engine/indicators/prop_speed_rpm[0];	12
+
+# Altimeter ref. pressure :	0..1000 --> 28..31 In.Hg (env. 950..1050 mb)
+# 							dest = source * ( 31 - 28 ) / 1000 + 28
+#ANA_DREF;AdjC-1;sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot;0.003;28
+
+# Bottom panel left unit
+#RREF_TOR;LedA-9;sim/cockpit2/electrical/battery_on;
+#RREF_TOR;LedB-9;sim/cockpit2/switches/avionics_power_on;
+
+# Bottom panel right unit
+#RREF_TOR;LedA-12;sim/cockpit2/switches/navigation_lights_on;
+#TOR_DREF;IntA-12;sim/cockpit2/switches/navigation_lights_on;
+
+# ============================================================================
+# X-Plane Commands
+# ----------------------------------------------------------------------------
+# Liste des associations entre actuateurs TOR et commandes X-Plane
+# (cf. Resources/plugins/Commands.txt)
+#
+# Les champs 'true_suffix' et 'false_suffix' sont optionnels. Ils peuvent être
+# utilisés pour compléter le radical 'command_path' dans le cas d'une commande
+# disposant de deux états opposés associées à un unique actuateur.
+# exemple :	command_path = sim/lights/landing_lights_
+#			true_suffix  = on
+#			false_suffix = off
+# ----------------------------------------------------------------------------
+# 0         1                   2             3            4
+# TOR_CMND; digital_input_name; command_path; true_suffix; false_suffix
+# ----------------------------------------------------------------------------
+
+#TOR_CMND; IntB-9; sim/lights/landing_lights_; on; off
+#TOR_CMND; Sel-5;  sim/operation/pause_toggle
+
+# ============================================================================
+# ModbusIO to/from QFI direct links
+# ----------------------------------------------------------------------------
+# Liste des connexions à établir  directement entre les E/S Modbus et les QFI,
+# sans interaction avec X-Plane.
+# Le champ 1 est le nom de l'E/S  dans la cartographie Modbus.  Le champ 3 est
+# un simple  numéro  d'ordre  utile lorsque  plusieurs E/S  de même type  sont 
+# associées au même QFI. 
+#
+# Les 2 champs  'value_scale' (default 1)  et 'value_offset' (default 0)  sont
+# optionnels.  Ils permettent de mettre en place  le cas échéant  une relation
+# linéaire entre la source et la destination :  dest = source * scale + offset
+# ----------------------------------------------------------------------------
+# 0        1                    2              3    4            5
+# ANA_QFI; analog_input_name;   instrument_id; num; value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0        1                    2              3    4            5
+# TOR_QFI; digital_input_name;  instrument_id; num; value_scale; value_offset
+# ----------------------------------------------------------------------------
+# 0        1                    2              3    4            5
+# QFI_TOR; digital_output_name; instrument_id; num; value_scale; value_offset
+# ----------------------------------------------------------------------------
+
+# test: Sel-2 --> Chronograph selectPressed(0) : OK
+#TOR_QFI;Sel-2; 6; 0
+
+# test: Chronograph alarm n°1 --> LedR-1 : OK
+#QFI_TOR;LedR-1; 6; 1
+
+# test: Adj-1 --> Tachymeter - axe ROTOR : OK
+#ANA_QFI;Adj-1;5;1
+
+# Altimeter unit selection ( inHg | mBar )
+#TOR_QFI;Sel-1; 1; 0
+
+# ============================================================================
+# ModbusIO to ModbusIO direct links
+# ----------------------------------------------------------------------------
+# Liste des connexions à établir directement  entre les entrées et les sorties
+# digitales Modbus, sans interaction avec X-Plane ou les QFI.
+#
+# Les 2 champs  'value_scale' (default 1)  et 'value_offset' (default 0)  sont
+# optionnels.  Ils permettent de mettre en place  le cas échéant  une relation
+# linéaire entre la source et la destination :  dest = source * scale + offset
+# ----------------------------------------------------------------------------
+# 0        1                   2                    3            4
+# TOR_TOR; digital_input_name; digital_output_name; value_scale; value_offset
+# ----------------------------------------------------------------------------
+
+# test: IntA-10 --> LedA-10 : OK
+#TOR_TOR; IntA-10; LedA-10
+
+# ============================================================================
+# 3D Objects (experimental)
+# ----------------------------------------------------------------------------
+# Objet 3D au format OBJ  défini par  un numéro d'index,  un chemin d'accès au 
+# fichier et des informations de positionnement.
+#
+# 'id' est un numéro discriminant
+# 'path' est le chemin relatif p/r à l'exécutable X-Plane
+# 'lat' et 'lon' spécifient la position de l'objet en degrés décimaux
+# 'ele' est l'altitude en mètres
+# 'psi', the' et 'phi' donnent l'attitude en degrés
+#
+# Les deux champs  'on_ground'  (default 0)  et 'smoke_size' (default 0)  sont
+# optionnels.
+# ----------------------------------------------------------------------------
+# 0      1          2     3    4    5    6    7    8    9          10
+# OBJ3D; obj_index; path; lat; lon; ele; psi; the; phi; on_ground; smoke_size
+# ----------------------------------------------------------------------------
+
+#OBJ3D;1;sdis/Buildings01.obj;4500;4500;4500;0;0;0;1;4500
+#OBJ3D;1;sdis/Buildings01.obj;48.721;2.320;90;0;0;0;0;50
+#OBJ3D;2;Custom Scenery/Aerosoft - LFPO Paris Orly/Objects/Airport/Buildings15.obj;48.721;2.320;0;0;0;0
+#OBJ3D;1;Buildings15.obj;48.721;2.320;0;0;0;0
+#OBJ3D;2;Custom Scenery/Aerosoft - LFPO Paris Orly/Objects/Airport/Buildings15.obj;48.721;2.320;0;0;0;0
