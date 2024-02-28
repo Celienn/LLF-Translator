@@ -10,15 +10,15 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    llftranslator.cpp \
-    mainwindow.cpp
+    src/llftranslator.cpp \
+    src/mainwindow.cpp
 
 HEADERS += \
-    llftranslator.h \
-    mainwindow.h
+    src/llftranslator.h \
+    src/mainwindow.h
 
 FORMS += \
-    mainwindow.ui
+    src/mainwindow.ui
 
 INCLUDEPATH += "C:/MSFS SDK/SimConnect SDK/include"
 
