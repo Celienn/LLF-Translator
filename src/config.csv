@@ -1,33 +1,33 @@
-sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE_ALTITUDE
-sim/cockpit2/gauges/indicators/vvi_fpm_pilot,PLANE_VERTICAL_SPEED
-sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot,PLANE_ROLL_DEGREES
-sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot,PLANE_PITCH_DEGREES
-sim/cockpit2/gauges/indicators/airspeed_kts_pilot,AIRSPEED_INDICATED
-sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot,NAV1_HDEF_DOT
-sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot,NAV1_OBS_DEGREES_MAGNETIC
-sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot,NAV1_TOFROM
-sim/cockpit2/clock_timer/local_time_hours ,CLOCK_LOCAL_TIME_HOURS
-sim/cockpit2/clock_timer/local_time_minutes,CLOCK_LOCAL_TIME_MINUTES
-sim/cockpit2/clock_timer/local_time_seconds,CLOCK_LOCAL_TIME_SECONDS
-sim/cockpit2/clock_timer/timer_running,CLOCK_TIMER_RUNNING
-sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot,PLANE_HEADING_DEGREES_MAGNETIC
-sim/flightmodel/engine/POINT_pitch_deg[0],ENG_POINT_PITCH_DEG₀
-sim/cockpit2/temperature/outside_air_temp_degc,AMBIENT_TEMPERATURE
-sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE_ALTITUDE
-sim/cockpit2/gauges/indicators/slip_deg,PLANE_SLIP_SKID_BALL_POSITION
-sim/cockpit2/fuel/fuel_quantity,FUEL_TOTAL_QUANTITY_WEIGHT
-sim/flightmodel/weight/m_fuel[0],PAYLOAD_STATION_WEIGHT₀
-sim/flightmodel/engine/ENGN_EGT_c[0],ENG_EXHAUST_GAS_TEMPERATURE_CELSIUS₀
-sim/cockpit2/engine/indicators/EGT_deg_C[0],ENG_EXHAUST_GAS_TEMPERATURE_CELSIUS₁
-sim/cockpit2/electrical/dc_voltmeter_value,ELECTRICAL_BUS_VOLTAGE
-sim/flightmodel/engine/ENGN_bat_volt[0],ENG_BATTERY_VOLTAGE₀
-sim/cockpit2/electrical/battery_voltage_indicated_volts[0],ELECTRICAL_BATTERY_VOLTAGE
-sim/cockpit2/engine/indicators/oil_temperature_deg_C[0],ENG_OIL_TEMPERATURE_CELSIUS₁
-sim/cockpit2/engine/indicators/oil_pressure_psi[0],ENG_OIL_PRESSURE_PSI₁
-sim/flightmodel/engine/ENGN_oil_temp_c[0],ENG_OIL_TEMPERATURE_CELSIUS₀
-sim/flightmodel/engine/ENGN_oil_press_psi[0],ENG_OIL_PRESSURE_PSI₀
-sim/cockpit2/engine/indicators/engine_speed_rpm[0],ENG_RPM₁
-sim/cockpit2/engine/indicators/prop_speed_rpm[0],PROP_RPM₁
-sim/cockpit2/electrical/battery_on,ELECTRICAL_MASTER_BATTERY_SWITCH
-sim/cockpit2/switches/avionics_power_on,ELECTRICAL_MASTER_ALTERNATOR_SWITCH
-sim/cockpit2/switches/navigation_lights_on,LIGHTS_NAV
+sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE
+sim/cockpit2/gauges/indicators/vvi_fpm_pilot,PLANE VERTICAL SPEED
+sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot,PLANE ROLL DEGREES
+sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot,PLANE PITCH DEGREES
+sim/cockpit2/gauges/indicators/airspeed_kts_pilot,AIRSPEED INDICATED
+sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot,NAV1 HDEF DOT
+sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot,NAV1 OBS DEGREES MAGNETIC
+sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot,NAV1 TOFROM
+sim/cockpit2/clock_timer/local_time_hours ,CLOCK LOCAL TIME HOURS
+sim/cockpit2/clock_timer/local_time_minutes,CLOCK LOCAL TIME MINUTES
+sim/cockpit2/clock_timer/local_time_seconds,CLOCK LOCAL TIME SECONDS
+sim/cockpit2/clock_timer/timer_running,CLOCK TIMER RUNNING
+sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot,PLANE HEADING DEGREES MAGNETIC
+sim/flightmodel/engine/POINT_pitch_deg[0],ENG POINT PITCH DEG 0
+sim/cockpit2/temperature/outside_air_temp_degc,AMBIENT TEMPERATURE
+sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE
+sim/cockpit2/gauges/indicators/slip_deg,PLANE SLIP SKID BALL POSITION
+sim/cockpit2/fuel/fuel_quantity,FUEL TOTAL QUANTITY WEIGHT
+sim/flightmodel/weight/m_fuel[0],PAYLOAD STATION WEIGHT 0
+sim/flightmodel/engine/ENGN_EGT_c[0],ENG EXHAUST GAS TEMPERATURE CELSIUS 0
+sim/cockpit2/engine/indicators/EGT_deg_C[0],ENG EXHAUST GAS TEMPERATURE CELSIUS 1
+sim/cockpit2/electrical/dc_voltmeter_value,ELECTRICAL BUS VOLTAGE
+sim/flightmodel/engine/ENGN_bat_volt[0],ENG BATTERY VOLTAGE 0
+sim/cockpit2/electrical/battery_voltage_indicated_volts[0],ELECTRICAL BATTERY VOLTAGE
+sim/cockpit2/engine/indicators/oil_temperature_deg_C[0],ENG OIL TEMPERATURE CELSIUS 1
+sim/cockpit2/engine/indicators/oil_pressure_psi[0],ENG OIL PRESSURE PSI 1
+sim/flightmodel/engine/ENGN_oil_temp_c[0],ENG OIL TEMPERATURE CELSIUS 0
+sim/flightmodel/engine/ENGN_oil_press_psi[0],ENG OIL PRESSURE PSI 0
+sim/cockpit2/engine/indicators/engine_speed_rpm[0],ENG RPM 1
+sim/cockpit2/engine/indicators/prop_speed_rpm[0],PROP RPM 1
+sim/cockpit2/electrical/battery_on,ELECTRICAL MASTER BATTERY SWITCH
+sim/cockpit2/switches/avionics_power_on,ELECTRICAL MASTER ALTERNATOR SWITCH
+sim/cockpit2/switches/navigation_lights_on,LIGHTS NAV
