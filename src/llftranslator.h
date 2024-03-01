@@ -22,7 +22,8 @@ class LLFTranslator
         void addVariable(const vector<string> var);
         bool isConnected() { return connected; };
         void connect();
-        
+        friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+
         template <typename T>
         void readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type, function<void(T)> callback, int frequency){
             hash<string> hasher;
@@ -46,9 +47,11 @@ class LLFTranslator
 
             Thread.detach();
         }
-
+        
+        vector<string> loadConfig();
+        string translateXPlaneToMFS(string ref);
     private:
-        vector<string> variables;
+        vector<string> config;
         bool connected;
         HANDLE hSimConnect;
         HRESULT hr;
