@@ -1,5 +1,5 @@
-#include "src/mainwindow.h"
-#include "src/llftranslator.h"
+#include "mainwindow.h"
+#include "llftranslator.h"
 
 #include <QApplication>
 

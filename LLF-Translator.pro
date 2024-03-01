@@ -21,6 +21,7 @@ FORMS += \
     src/mainwindow.ui
 
 INCLUDEPATH += "C:/MSFS SDK/SimConnect SDK/include"
+INCLUDEPATH += "./src"
 
 LIBS += -L"C:/MSFS SDK/SimConnect SDK/lib" -lSimConnect
 
