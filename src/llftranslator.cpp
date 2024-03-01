@@ -37,44 +37,29 @@ void LLFTranslator::addVariable( vector<string> var){
     }
 };
 
-void CALLBACK MyDispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext)
-{
-    switch(pData->dwID)
-    {
-        case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
-        {
-            SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*)pData;
-
-            switch(pObjData->dwRequestID)
-            {
-                case REQUEST_1:
-                {
-                    Struct1 *pS = (Struct1*)&pObjData->dwData;
-                    qDebug() << pS->altitude;
-                    break;
-                }
-
-                default:
-                    break;
-            }
-            break;
-        }
-
-        default:
-            break;
+// Merci Copilot :D
+void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext) {
+    LLFTranslator* translator = static_cast<LLFTranslator*>(pContext);
+    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*)pData;
+    DWORD request = pObjData->dwRequestID;
+    if (translator->callbacks.count(request)) {
+        translator->callbacks[request]();
     }
 }
 
-// USAGE :
-// readValue("Plane Altitude", "feet", SIMCONNECT_DATATYPE_FLOAT64,callback);
-void LLFTranslator::readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type,int frequency){
-    thread Thread([this,MFSvar,unit,type,frequency]() {
+void LLFTranslator::readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type, function<void()> callback, int frequency){
+    hash<string> hasher;
+    DWORD definition = hasher(MFSvar) % 1000;
+    DWORD request = hasher(string(MFSvar) + string(unit))  % 1000;
+    callbacks[request] = callback;
+    thread Thread([this,MFSvar,unit,type,frequency,definition,request]() {
         if (!isConnected()) return; 
-        SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, MFSvar, unit, type);
+        SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
         while(true) 
         {
-            SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_1, DEFINITION_1, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_ONCE);
-            SimConnect_CallDispatch(hSimConnect, MyDispatchProcRD, NULL);
+            // Je met 0 pour le moment afin de tester
+            SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_ONCE);
+            SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
             Sleep(1000/frequency);
         }
     });
