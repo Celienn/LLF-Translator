@@ -31,6 +31,12 @@ void LLFTranslator::addVariable(const string &var )
     variables.push_back(var);
 }
 
+void LLFTranslator::addVariable( vector<string> var){
+    for (int i = 0; i < var.size(); i++){
+        variables.push_back(var[i]);
+    }
+};
+
 void CALLBACK MyDispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext)
 {
     switch(pData->dwID)
@@ -44,7 +50,7 @@ void CALLBACK MyDispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pCont
                 case REQUEST_1:
                 {
                     Struct1 *pS = (Struct1*)&pObjData->dwData;
-                    qDebug() << "Altitude: " << pS->altitude;
+                    qDebug() << pS->altitude;
                     break;
                 }
 
@@ -59,14 +65,24 @@ void CALLBACK MyDispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pCont
     }
 }
 
-void LLFTranslator::addVariable( vector<string> var){
-    for (int i = 0; i < var.size(); i++){
-        variables.push_back(var[i]);
-    }
-};
-
 // USAGE :
 // readValue("Plane Altitude", "feet", SIMCONNECT_DATATYPE_FLOAT64,callback);
+void LLFTranslator::readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type,int frequency){
+    thread Thread([this,MFSvar,unit,type,frequency]() {
+        if (!isConnected()) return; 
+        SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, MFSvar, unit, type);
+        while(true) 
+        {
+            SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_1, DEFINITION_1, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_ONCE);
+            SimConnect_CallDispatch(hSimConnect, MyDispatchProcRD, NULL);
+            Sleep(1000/frequency);
+        }
+    });
+
+    Thread.detach();
+}
+
+
 
 void LLFTranslator::connect() {
     HRESULT hr;
@@ -75,15 +91,6 @@ void LLFTranslator::connect() {
         connected = true;
         qDebug() << "Connected to MFS!";
 
-        hr = SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE_FLOAT64);
-        
-
-        while(true) 
-        {
-            hr = SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_1, DEFINITION_1, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_ONCE);
-            SimConnect_CallDispatch(hSimConnect, MyDispatchProcRD, NULL);
-            Sleep(1);
-        }
     }
     else
     {

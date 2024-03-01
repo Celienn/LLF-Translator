@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <string>
 #include <vector>
-
+#include <thread>
 #include <windows.h>
 #include <SimConnect.h>
 
@@ -20,7 +20,7 @@ class LLFTranslator
         void addVariable(const vector<string> var);
         bool isConnected() { return connected; };
         void connect();
-        void readVar();
+        void readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type,int frequency = 1);
         
     private:
         vector<string> variables;
