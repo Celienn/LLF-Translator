@@ -24,8 +24,11 @@ class LLFTranslator
         void connect();
         void readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type,function<void()> callback, int frequency = 1);
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+    
+        vector<string> loadConfig();
+        string translateXPlaneToMFS(string ref);
     private:
-        vector<string> variables;
+        vector<string> config;
         bool connected;
         HANDLE hSimConnect;
         HRESULT hr;
