@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
     w.show();
     LLFTranslator llf;
     llf.connect();
-    llf.readVar("Plane Altitude", "feet", SIMCONNECT_DATATYPE_FLOAT64,[](){
-        qDebug() << "Callback";
+    llf.readVar<double>("Plane Altitude", "meter", SIMCONNECT_DATATYPE_FLOAT64,[](double altitude){
+        qDebug() << altitude;
     },5);
     return a.exec();
 }
