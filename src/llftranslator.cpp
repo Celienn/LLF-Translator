@@ -7,7 +7,7 @@ struct Struct1
 
 LLFTranslator::LLFTranslator()
 {
-
+    loadConfig();
 }
 
 LLFTranslator::~LLFTranslator()
@@ -69,7 +69,7 @@ vector<string> split(string str, string delimiter){
 vector<string> LLFTranslator::loadConfig()
 {
     vector<string> table;
-    QFile file(":config.csv");
+    QFile file(":src/config.csv");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Impossible d'ouvrir le fichier : " << file.errorString();
@@ -92,7 +92,7 @@ vector<string> LLFTranslator::loadConfig()
 const char* LLFTranslator::translateXPlaneToMFS(string ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
-        if (config[i] == ref) continue;
+        if (config[i] == ref);
         {
             return config[i + 1].c_str();
         }

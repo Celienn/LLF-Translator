@@ -13,7 +13,6 @@ sim/cockpit2/clock_timer/timer_running,CLOCK TIMER RUNNING
 sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot,PLANE HEADING DEGREES MAGNETIC
 sim/flightmodel/engine/POINT_pitch_deg[0],ENG POINT PITCH DEG 0
 sim/cockpit2/temperature/outside_air_temp_degc,AMBIENT TEMPERATURE
-sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE
 sim/cockpit2/gauges/indicators/slip_deg,PLANE SLIP SKID BALL POSITION
 sim/cockpit2/fuel/fuel_quantity,FUEL TOTAL QUANTITY WEIGHT
 sim/flightmodel/weight/m_fuel[0],PAYLOAD STATION WEIGHT 0
