@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <SimConnect.h>
 #include <QFile>
+#include <QByteArray>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ class LLFTranslator
             Thread.detach();
         }
         
+        const char* translateXPlaneToMFS(string ref);
     private:
         vector<string> config;
         vector<string> variables;
@@ -59,6 +61,7 @@ class LLFTranslator
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         vector<string> loadConfig();
-        const char* translateXPlaneToMFS(string ref);
+        QByteArray generateFrame(string ref, float value);
+        
 };
 #endif // LLFTRANSLATOR_H

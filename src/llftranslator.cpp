@@ -100,3 +100,12 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     return "Not Found";
 }
 
+QByteArray LLFTranslate::generateFrame(string ref, float value){
+    QByteArray frame;
+    frame.append('DREF');
+    frame.append((char)0);
+    frame.append(value);
+    frame.append(ref);
+    frame.append((char)0);
+    return frame;
+}
