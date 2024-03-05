@@ -100,12 +100,18 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     return "Not Found";
 }
 
-QByteArray LLFTranslate::generateFrame(string ref, float value){
+QByteArray LLFTranslator::generateFrame(string ref, float value){
     QByteArray frame;
-    frame.append('DREF');
+    frame.append('D');
+    frame.append('R');
+    frame.append('E');
+    frame.append('F');
     frame.append((char)0);
-    frame.append(value);
-    frame.append(ref);
-    frame.append((char)0);
+    // Merci copilot :D
+    frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
+    frame.append(ref.c_str());
+    while(frame.size() < 509) {
+        frame.append((char)0);
+    }
     return frame;
 }
