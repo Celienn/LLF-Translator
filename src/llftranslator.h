@@ -7,6 +7,7 @@
 #include <thread>
 #include <windows.h>
 #include <SimConnect.h>
+#include <QFile>
 
 using namespace std;
 
@@ -48,15 +49,16 @@ class LLFTranslator
             Thread.detach();
         }
         
-        vector<string> loadConfig();
-        string translateXPlaneToMFS(string ref);
     private:
         vector<string> config;
+        vector<string> variables;
         bool connected;
         HANDLE hSimConnect;
         HRESULT hr;
         map<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+        vector<string> loadConfig();
+        const char* translateXPlaneToMFS(string ref);
 };
 #endif // LLFTRANSLATOR_H

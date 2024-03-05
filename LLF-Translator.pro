@@ -25,7 +25,7 @@ INCLUDEPATH += "./src"
 
 LIBS += -L"C:/MSFS SDK/SimConnect SDK/lib" -lSimConnect
 
-RESOURCES += config.csv
+RESOURCES += ./src/config.csv
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
