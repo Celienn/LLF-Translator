@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "llftranslator.h"
 #include <QApplication>
-
-
+#include <QUdpSocket>
 
 int main(int argc, char *argv[])
 {
@@ -11,9 +10,36 @@ int main(int argc, char *argv[])
     w.show();
     LLFTranslator llf;
     llf.connect();
-    qDebug() << llf.translateXPlaneToMFS("sim/cockpit2/gauges/indicators/altitude_ft_pilot");
-    llf.readVar<double>(llf.translateXPlaneToMFS("sim/cockpit2/gauges/indicators/altitude_ft_pilot"), "meter", SIMCONNECT_DATATYPE_FLOAT64,[](double altitude){
-        qDebug() << altitude;
-    },5);
+    // llf.readVar<double>(llf.translateXPlaneToMFS("sim/cockpit2/gauges/indicators/altitude_ft_pilot"), "meter", SIMCONNECT_DATATYPE_FLOAT64,[](double altitude){
+    //     qDebug() << altitude;
+    // },5);
+
+    QUdpSocket *receiver = new QUdpSocket();
+    QUdpSocket *sender = new QUdpSocket();
+
+    // Écouter sur le port 49001
+    receiver->bind(QHostAddress::Any, 49001);
+    
+    QObject::connect(receiver, &QUdpSocket::readyRead, [&]() {
+        while (receiver->hasPendingDatagrams()) {
+            QByteArray datagram;
+            datagram.resize(receiver->pendingDatagramSize());
+            QHostAddress senderAddress;
+            quint16 senderPort;
+
+            receiver->readDatagram(datagram.data(), datagram.size(), &senderAddress, &senderPort);
+
+            // Analyser le datagramme pour extraire la demande RREF
+            // (Cela suppose que vous avez une méthode parseRREFRequest qui fait cela)
+            int dref_id;
+            float value;
+            llf.parseRREFRequest(datagram, &dref_id, &value);
+            
+            // Générer une réponse RREF et l'envoyer au client
+            QByteArray response = llf.generateFrame(dref_id, value);
+            sender->writeDatagram(response, senderAddress, senderPort);
+        }
+    });
+
     return a.exec();
 }
