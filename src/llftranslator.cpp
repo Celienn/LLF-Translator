@@ -110,16 +110,17 @@ QByteArray LLFTranslator::generateFrame(int dref_id, float value){
     // Merci copilot :D
     frame.append(reinterpret_cast<const char*>(&dref_id), sizeof(int));
     frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
-    while(frame.size() < 13) {
+    while(frame.size() < 412) {
         frame.append((char)0);
     }
     return frame;
 }
 
 
-void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, const char *dref){
+void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, char *dref)
+{
 
-    if (datagram.size() >= 13) {
+    if (datagram.size() <= 13) {
         qDebug() << "Invalid datagram size";
         return;
     }

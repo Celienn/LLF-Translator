@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     QUdpSocket *sender = new QUdpSocket();
 
     // Écouter sur le port 49001
-    receiver->bind(QHostAddress::Any, 49001);
+    receiver->bind(QHostAddress::Any, 49000);
     
     QObject::connect(receiver, &QUdpSocket::readyRead, [&]() {
         while (receiver->hasPendingDatagrams()) {
@@ -32,12 +32,12 @@ int main(int argc, char *argv[])
             // Analyser le datagramme pour extraire la demande RREF
             // (Cela suppose que vous avez une méthode parseRREFRequest qui fait cela)
             int id;
-            char* dref;
+            char dref;
             llf.parseRREFRequest(datagram, &id, &dref);
             qDebug() << "Received RREF request for " << dref << " with id " << id;
-            
+
             // Générer une réponse RREF et l'envoyer au client
-            QByteArray response = llf.generateFrame(dref_id, 100);
+            QByteArray response = llf.generateFrame(dref, 100);
             sender->writeDatagram(response, senderAddress, senderPort);
         }
     });
