@@ -50,7 +50,10 @@ class LLFTranslator
             Thread.detach();
         }
         
+        // Temporaire pour le debug
         const char* translateXPlaneToMFS(string ref);
+        QByteArray generateFrame(int dref_id, float value);
+        void parseRREFRequest(QByteArray datagram, int *dref_id, float *value);
     private:
         vector<string> config;
         vector<string> variables;
@@ -61,7 +64,6 @@ class LLFTranslator
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         vector<string> loadConfig();
-        QByteArray generateFrame(string ref, float value);
         
 };
 #endif // LLFTRANSLATOR_H

@@ -100,18 +100,30 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     return "Not Found";
 }
 
-QByteArray LLFTranslator::generateFrame(string ref, float value){
+QByteArray LLFTranslator::generateFrame(int dref_id, float value){
     QByteArray frame;
-    frame.append('D');
+    frame.append('R');
     frame.append('R');
     frame.append('E');
     frame.append('F');
-    frame.append((char)0);
+    frame.append(',');
     // Merci copilot :D
+    frame.append(reinterpret_cast<const char*>(&dref_id), sizeof(int));
     frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
-    frame.append(ref.c_str());
-    while(frame.size() < 509) {
+    while(frame.size() < 13) {
         frame.append((char)0);
     }
     return frame;
 }
+
+
+void LLFTranslator::parseRREFRequest(QByteArray datagram, int *dref_id, float *value){
+
+    if (datagram.size() >= 13) {
+        qDebug() << "Invalid datagram size";
+        return;
+    }
+
+    memcpy(dref_id, datagram.data() + 5, 4);
+    memcpy(dref_id, datagram.data() + 9, 4);
+};
