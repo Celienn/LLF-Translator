@@ -31,12 +31,13 @@ int main(int argc, char *argv[])
 
             // Analyser le datagramme pour extraire la demande RREF
             // (Cela suppose que vous avez une méthode parseRREFRequest qui fait cela)
-            int dref_id;
-            float value;
-            llf.parseRREFRequest(datagram, &dref_id, &value);
+            int id;
+            char* dref;
+            llf.parseRREFRequest(datagram, &id, &dref);
+            qDebug() << "Received RREF request for " << dref << " with id " << id;
             
             // Générer une réponse RREF et l'envoyer au client
-            QByteArray response = llf.generateFrame(dref_id, value);
+            QByteArray response = llf.generateFrame(dref_id, 100);
             sender->writeDatagram(response, senderAddress, senderPort);
         }
     });

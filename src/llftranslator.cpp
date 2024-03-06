@@ -117,13 +117,13 @@ QByteArray LLFTranslator::generateFrame(int dref_id, float value){
 }
 
 
-void LLFTranslator::parseRREFRequest(QByteArray datagram, int *dref_id, float *value){
+void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, const char *dref){
 
     if (datagram.size() >= 13) {
         qDebug() << "Invalid datagram size";
         return;
     }
 
-    memcpy(dref_id, datagram.data() + 5, 4);
-    memcpy(dref_id, datagram.data() + 9, 4);
+    memcpy(id,   datagram.data() + 9, 4);
+    memcpy(dref, datagram.data() + 13, datagram.size() - 13);
 };
