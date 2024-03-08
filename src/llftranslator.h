@@ -52,7 +52,7 @@ class LLFTranslator
         
         // Temporaire pour le debug
         const char* translateXPlaneToMFS(string ref);
-        QByteArray generateFrame(int dref_id, float value);
+        QByteArray generateFrame(int id, float value);
         void parseRREFRequest(QByteArray datagram, int *id, char *dref);
     private:
         vector<string> config;

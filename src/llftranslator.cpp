@@ -100,31 +100,28 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     return "Not Found";
 }
 
-QByteArray LLFTranslator::generateFrame(int dref_id, float value){
+QByteArray LLFTranslator::generateFrame(int id, float value){
     QByteArray frame;
     frame.append('R');
     frame.append('R');
     frame.append('E');
     frame.append('F');
-    frame.append(',');
-    // Merci copilot :D
-    frame.append(reinterpret_cast<const char*>(&dref_id), sizeof(int));
+    frame.append(static_cast<char>(0));
+    frame.append(reinterpret_cast<const char*>(&id), sizeof(int));
     frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
-    while(frame.size() < 412) {
-        frame.append((char)0);
-    }
     return frame;
 }
 
 
-void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, char *dref)
+void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, char *rref)
 {
-
-    if (datagram.size() <= 13) {
-        qDebug() << "Invalid datagram size";
+    if (datagram.size() < 13 || datagram.size() > 413){
+        qDebug() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
         return;
     }
 
     memcpy(id,   datagram.data() + 9, 4);
-    memcpy(dref, datagram.data() + 13, datagram.size() - 13);
+    memcpy(rref, datagram.data() + 13, datagram.size() - 13);
+    
+    rref[datagram.size() - 13] = '\0';
 };
