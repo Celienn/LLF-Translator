@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
             char rref[400];
             llf.parseRREFRequest(datagram, &id, rref);
             qDebug() << "Received RREF request for " << rref << " with id " << id;
-
+            Sleep(7500);
             // Générer une réponse RREF et l'envoyer au client
-            QByteArray response = llf.generateFrame(id, 10000.0);
+            QByteArray response = llf.generateFrame(2, 5000.0);
             sender->writeDatagram(response, senderAddress, 49001);
         }
     });

@@ -106,7 +106,8 @@ QByteArray LLFTranslator::generateFrame(int id, float value){
     frame.append('R');
     frame.append('E');
     frame.append('F');
-    frame.append(static_cast<char>(0));
+    frame.append(',');
+    //frame.append(static_cast<char>(0));
     frame.append(reinterpret_cast<const char*>(&id), sizeof(int));
     frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
     return frame;
@@ -117,6 +118,11 @@ void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, char *rref)
 {
     if (datagram.size() < 13 || datagram.size() > 413){
         qDebug() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
+        return;
+    }
+
+    if (!datagram.startsWith("RREF")) {
+        qDebug() << "Invalid datagram : does not start with 'RREF'";
         return;
     }
 
