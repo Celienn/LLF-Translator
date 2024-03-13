@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <SimConnect.h>
 #include <QFile>
-#include <QByteArray>
+#include <udpworker.h>
 
 using namespace std;
 
@@ -52,8 +52,6 @@ class LLFTranslator
         
         // Temporaire pour le debug
         const char* translateXPlaneToMFS(string ref);
-        QByteArray generateFrame(int id, float value);
-        void parseRREFRequest(QByteArray datagram, int *id, char *dref);
     private:
         vector<string> config;
         vector<string> variables;
@@ -61,9 +59,11 @@ class LLFTranslator
         HANDLE hSimConnect;
         HRESULT hr;
         map<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
+        UDPWorker *udpWorker;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         vector<string> loadConfig();
-        
+    slots:
+        void onDatagramReceived(char* id, float value);
 };
 #endif // LLFTRANSLATOR_H

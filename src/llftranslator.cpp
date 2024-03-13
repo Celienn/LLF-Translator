@@ -8,6 +8,7 @@ struct Struct1
 LLFTranslator::LLFTranslator()
 {
     loadConfig();
+    udpWorker = new UDPWorker(this);
 }
 
 LLFTranslator::~LLFTranslator()
@@ -42,7 +43,7 @@ void LLFTranslator::connect() {
     {
         connected = true;
         qDebug() << "Connected to MFS!";
-
+        udpWorker->init();
     }
     else
     {
@@ -99,35 +100,3 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     }
     return "Not Found";
 }
-
-QByteArray LLFTranslator::generateFrame(int id, float value){
-    QByteArray frame;
-    frame.append('R');
-    frame.append('R');
-    frame.append('E');
-    frame.append('F');
-    frame.append(',');
-    //frame.append(static_cast<char>(0));
-    frame.append(reinterpret_cast<const char*>(&id), sizeof(int));
-    frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
-    return frame;
-}
-
-
-void LLFTranslator::parseRREFRequest(QByteArray datagram, int *id, char *rref)
-{
-    if (datagram.size() < 13 || datagram.size() > 413){
-        qDebug() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
-        return;
-    }
-
-    if (!datagram.startsWith("RREF")) {
-        qDebug() << "Invalid datagram : does not start with 'RREF'";
-        return;
-    }
-
-    memcpy(id,   datagram.data() + 9, 4);
-    memcpy(rref, datagram.data() + 13, datagram.size() - 13);
-    
-    rref[datagram.size() - 13] = '\0';
-};

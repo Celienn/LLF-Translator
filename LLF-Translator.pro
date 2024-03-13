@@ -12,11 +12,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     src/llftranslator.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/udpworker.cpp
 
 HEADERS += \
     src/llftranslator.h \
-    src/mainwindow.h
+    src/mainwindow.h \
+    src/udpworker.h
 
 FORMS += \
     src/mainwindow.ui
