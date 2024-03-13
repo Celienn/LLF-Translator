@@ -16,14 +16,19 @@ LLFTranslator::~LLFTranslator()
 
 }
 
-void LLFTranslator::addVariable(const string &var )
+void LLFTranslator::addVariable(const string &var, int frequency)
 {
     variables.push_back(var);
+    qDebug() << "Adding variable " << QString::fromStdString(var) << " with frequency " << frequency << "Hz";
+    readVar<double>(var.c_str(), "meter", SIMCONNECT_DATATYPE_FLOAT64, [&](double value) {
+        qDebug() << "Received " << QString::fromStdString(var) << " with value " << value;
+        udpWorker->sendDatagram(QString::fromStdString(var),value);
+    }, frequency);
 }
 
-void LLFTranslator::addVariable( vector<string> var){
+void LLFTranslator::addVariable( vector<string> var, int frequency){
     for (int i = 0; i < var.size(); i++){
-        variables.push_back(var[i]);
+        addVariable(var[i], frequency); 
     }
 };
 
@@ -43,6 +48,7 @@ void LLFTranslator::connect() {
     {
         connected = true;
         qDebug() << "Connected to MFS!";
+        QObject::connect(udpWorker, udpWorker->datagramReceived, this, onDatagramReceived);
         udpWorker->init();
     }
     else
@@ -99,4 +105,9 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
         }
     }
     return "Not Found";
+}
+
+void LLFTranslator::onDatagramReceived(char* rref, int frequency)
+{
+    addVariable(rref, frequency);
 }

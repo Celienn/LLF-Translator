@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <string>
 #include <vector>
-#include <thread>
+#include <QThread>
 #include <windows.h>
 #include <SimConnect.h>
 #include <QFile>
@@ -14,14 +14,14 @@ using namespace std;
 
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
-class LLFTranslator
+class LLFTranslator : public QObject
 {
 
     public:
         LLFTranslator();
         ~LLFTranslator();
-        void addVariable(const string &var);
-        void addVariable(const vector<string> var);
+        void addVariable(const string &var, int frequency = 0);
+        void addVariable(const vector<string> var, int frequency = 0);
         bool isConnected() { return connected; };
         void connect();
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
@@ -35,7 +35,7 @@ class LLFTranslator
                 T* data = (T*)&pObjData->dwData;
                 callback(*data);
             };
-            thread Thread([this,MFSvar,unit,type,frequency,definition,request]() {
+            QThread* thread = QThread::create([this, MFSvar, unit, type, frequency, definition, request] {
                 if (!isConnected()) return; 
                 SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
                 while(true) 
@@ -47,7 +47,8 @@ class LLFTranslator
                 }
             });
 
-            Thread.detach();
+            QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+            thread->start();
         }
         
         // Temporaire pour le debug
@@ -63,7 +64,8 @@ class LLFTranslator
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         vector<string> loadConfig();
-    slots:
-        void onDatagramReceived(char* id, float value);
+    public slots:
+        void onDatagramReceived(char* rref, int frequency);
 };
+
 #endif // LLFTRANSLATOR_H
