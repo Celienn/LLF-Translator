@@ -20,13 +20,12 @@ void LLFTranslator::addVariable(const string &var, int frequency)
 {
     variables.push_back(var);
     qDebug() << "Adding variable " << QString::fromStdString(var) << " with frequency " << frequency << "Hz";
-    qDebug() << translateXPlaneToMFS(var.c_str()) << " " << var.c_str() << " " << getXPlaneUnit(var.c_str());
     readVar<double>(translateXPlaneToMFS(var.c_str()), getXPlaneUnit(var.c_str()), SIMCONNECT_DATATYPE_FLOAT64, [this,var](double value) {
-        udpWorker->sendDatagram(QString::fromStdString(var),value);
+        udpWorker->sendFrame(QString::fromStdString(var),value);
     }, frequency);
 }
 
-void LLFTranslator::addVariable( vector<string> var, int frequency){
+void LLFTranslator::addVariable(const vector<string> var, int frequency = 0){
     for (int i = 0; i < var.size(); i++){
         addVariable(var[i], frequency); 
     }
@@ -115,7 +114,7 @@ const char* LLFTranslator::getXPlaneUnit(string ref)
             return config[i + 2].c_str();
         }
     }
-    return "Not Found"; // meters ?
+    return "Not Found";
 }
 
 void LLFTranslator::onDatagramReceived(char* rref, int frequency)

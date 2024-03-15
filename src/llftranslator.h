@@ -31,7 +31,6 @@ class LLFTranslator : public QObject
             hash<string> hasher;
             DWORD definition = hasher(MFSvar) % 10000;
             DWORD request = hasher(string(MFSvar) + string(unit))  % 10000;
-            qDebug() << MFSvar << " " << definition << " " << request;
             callbacks[request] = [callback, this, request, frequency](SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData){
                 T* data = (T*)&pObjData->dwData;
 

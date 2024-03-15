@@ -18,11 +18,11 @@ void UDPWorker::init()
     if (parent == nullptr) return;
 
     connect(socket, &QUdpSocket::readyRead, [&]() {
+
         while (socket->hasPendingDatagrams()) {
             QByteArray datagram;
             datagram.resize(socket->pendingDatagramSize());
             socket->readDatagram(datagram.data(), datagram.size(), &dstAddr, &dstPort);
-
 
             int id, freq;
             char rref[400];
@@ -36,13 +36,25 @@ void UDPWorker::init()
     });
 }
 
-void UDPWorker::sendDatagram(QString datagram, float value)
+void UDPWorker::sendFrame(QString dataref, float value)
 {
-    QByteArray frame = generateFrame(datagramIdMap[datagram], value);
+    QByteArray frame = generateDatagram(datagramIdMap[dataref], value);
     socket->writeDatagram(frame, dstAddr, dstPort);
 }
 
-QByteArray UDPWorker::generateFrame(int id, float value)
+void UDPWorker::sendFrame(QList<QPair<QString, float>> datagrams)
+{
+    QByteArray frame;
+
+    for (const auto& datagram : datagrams) {
+        QByteArray datagramFrame = generateDatagram(datagramIdMap[datagram.first], datagram.second);
+        frame.append(datagramFrame);
+    }
+
+    socket->writeDatagram(frame, dstAddr, dstPort);
+}
+
+QByteArray UDPWorker::generateDatagram(int id, float value)
 {
     QByteArray frame;
     frame.append('R');

@@ -16,14 +16,15 @@ class UDPWorker : public QObject
         UDPWorker(LLFTranslator *llf = nullptr);
         ~UDPWorker();
         void init();
-        void sendDatagram(QString datagram, float value);
+        void sendFrame(QString dataref, float value);
+        void sendFrame(QList<QPair<QString, float>> datagrams);
     private:
         QUdpSocket *socket;
         QHostAddress dstAddr;
         quint16 dstPort;
         LLFTranslator *parent;
         QHash<QString, int> datagramIdMap;
-        QByteArray generateFrame(int id, float value);
+        QByteArray generateDatagram(int id, float value);
         
         void parseRREFRequest(QByteArray datagram,int *frequency, int *id, char *rref);
     signals:
