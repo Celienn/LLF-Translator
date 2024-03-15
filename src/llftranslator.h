@@ -10,6 +10,8 @@
 #include <QFile>
 #include <udpworker.h>
 
+#include <QListIterator> // Pour les méthodes qui traduisent
+
 using namespace std;
 
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
@@ -58,8 +60,8 @@ class LLFTranslator : public QObject
         }
         
         // Temporaire pour le debug
-        const char* translateXPlaneToMFS(string ref);
-        const char* getXPlaneUnit(string ref);
+        QString translateXPlaneToMFS(QString ref,QList<QString> config);
+        QString getXPlaneUnit(QString ref,QList<QString> config);
     private:
         vector<string> config;
         vector<string> variables;
