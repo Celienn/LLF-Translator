@@ -10,9 +10,6 @@ int main(int argc, char *argv[])
     w.show();
     LLFTranslator llf;
     llf.connect();
-    // llf.readVar<double>(llf.translateXPlaneToMFS("sim/cockpit2/gauges/indicators/altitude_ft_pilot"), "meter", SIMCONNECT_DATATYPE_FLOAT64,[](double altitude){
-    //     qDebug() << altitude;
-    // },5);
     
     return a.exec();
 }
