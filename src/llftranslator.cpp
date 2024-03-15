@@ -59,45 +59,31 @@ void LLFTranslator::connect() {
     }
 }
 
-vector<string> split(string str, string delimiter){
-    size_t pos = 0;
-    string token;
-    vector<string> tokens;
-
-    while ((pos = str.find(delimiter)) != string::npos) {
-        token = str.substr(0, pos);
-        tokens.push_back(token);
-        str.erase(0, pos + delimiter.length());
-    }
-
-    tokens.push_back(str);
-    return tokens;
-}
-
-vector<string> LLFTranslator::loadConfig()
+QList<QString> loadConfig()
 {
-    vector<string> table;
-    QFile file(":src/config.csv");
+    QList<QString> list;
+    QFile file(":/config.csv");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Impossible d'ouvrir le fichier : " << file.errorString();
-        return table;
+        return list;
     }
 
     QTextStream in(&file);
-    string fileContent;
+    QString fileContent;
     while (!in.atEnd()) {
         QString line = in.readLine();
-        fileContent += line.toStdString() + ',';
+        fileContent += line + ',';
     }
 
-    table = ::split(fileContent, ",");
-    config = table;
+    list = fileContent.split(",");
+    config = list;
+
     file.close();
-    return table;
+    return list;
 }
 
-const char* LLFTranslator::translateXPlaneToMFS(string ref)
+QString translateXPlaneToMFS(QString ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
         if (config[i] == ref)
@@ -108,7 +94,7 @@ const char* LLFTranslator::translateXPlaneToMFS(string ref)
     return "Not Found";
 }
 
-const char* LLFTranslator::getXPlaneUnit(string ref)
+QString getXPlaneUnit(QString ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
         if (config[i] == ref)

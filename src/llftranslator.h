@@ -10,7 +10,6 @@
 #include <SimConnect.h>
 #include <QFile>
 #include <udpworker.h>
-#include <dataref.h>
 
 using namespace std;
 
@@ -62,12 +61,12 @@ class LLFTranslator : public QObject
             thread->start();
         }
         
-        // Temporaire pour le debug
-        const char* translateXPlaneToMFS(string ref);
-        const char* getXPlaneUnit(string ref);
+        // Temporaire pour le debug ( public )
+        QString translateXPlaneToMFS(QString ref);
+        QString getXPlaneUnit(QString ref);
     private:
         vector<string> config;
-        QList<Dataref*> variables;
+        vector<string> variables;
         bool connected;
         HANDLE hSimConnect;
         HRESULT hr;
@@ -76,7 +75,7 @@ class LLFTranslator : public QObject
         UDPWorker *udpWorker;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
-        vector<string> loadConfig();
+        QList<QString> loadConfig();
     public slots:
         void onDatagramReceived(char* rref, int frequency);
 };
