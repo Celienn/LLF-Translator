@@ -10,7 +10,7 @@
 #include <QFile>
 #include <udpworker.h>
 
-#include <QListIterator> // Pour les méthodes qui traduisent
+#include <QListIterator> // Pour les méthodes qui traduisent et le loader de config
 
 using namespace std;
 
@@ -59,11 +59,11 @@ class LLFTranslator : public QObject
             thread->start();
         }
         
-        // Temporaire pour le debug
-        QString translateXPlaneToMFS(QString ref,QList<QString> config);
-        QString getXPlaneUnit(QString ref,QList<QString> config);
+        // Temporaire pour le debug ( public )
+        QString translateXPlaneToMFS(QString ref);
+        QString getXPlaneUnit(QString ref);
     private:
-        vector<string> config;
+        QList<QString> config;
         vector<string> variables;
         bool connected;
         HANDLE hSimConnect;
@@ -73,7 +73,7 @@ class LLFTranslator : public QObject
         UDPWorker *udpWorker;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
-        vector<string> loadConfig();
+        QList<QString> loadConfig();
     public slots:
         void onDatagramReceived(char* rref, int frequency);
 };
