@@ -20,8 +20,8 @@ void LLFTranslator::addVariable(const string &var, int frequency)
 {
     variables.push_back(var);
     qDebug() << "Adding variable " << QString::fromStdString(var) << " with frequency " << frequency << "Hz";
-    readVar<double>(var.c_str(), "meter", SIMCONNECT_DATATYPE_FLOAT64, [&](double value) {
-        qDebug() << "Received " << QString::fromStdString(var) << " with value " << value;
+    qDebug() << translateXPlaneToMFS(var.c_str()) << " " << var.c_str();
+    readVar<double>(translateXPlaneToMFS(var.c_str()), "meter", SIMCONNECT_DATATYPE_FLOAT64, [this,var](double value) {
         udpWorker->sendDatagram(QString::fromStdString(var),value);
     }, frequency);
 }
@@ -99,7 +99,7 @@ vector<string> LLFTranslator::loadConfig()
 const char* LLFTranslator::translateXPlaneToMFS(string ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
-        if (config[i] == ref);
+        if (config[i] == ref)
         {
             return config[i + 1].c_str();
         }

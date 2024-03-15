@@ -6,7 +6,7 @@ sim/cockpit2/gauges/indicators/airspeed_kts_pilot,AIRSPEED INDICATED
 sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot,NAV1 HDEF DOT
 sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot,NAV1 OBS DEGREES MAGNETIC
 sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot,NAV1 TOFROM
-sim/cockpit2/clock_timer/local_time_hours ,CLOCK LOCAL TIME HOURS
+sim/cockpit2/clock_timer/local_time_hours,CLOCK LOCAL TIME HOURS
 sim/cockpit2/clock_timer/local_time_minutes,CLOCK LOCAL TIME MINUTES
 sim/cockpit2/clock_timer/local_time_seconds,CLOCK LOCAL TIME SECONDS
 sim/cockpit2/clock_timer/timer_running,CLOCK TIMER RUNNING

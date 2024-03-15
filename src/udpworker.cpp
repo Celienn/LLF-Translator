@@ -31,8 +31,8 @@ void UDPWorker::init()
 
             datagramIdMap[rref] = id;
 
-            // QByteArray response = generateFrame(id, 5000.0);
-            // socket->writeDatagram(response, dstAddr, dstPort);
+            //QByteArray response = generateFrame(id, 5000.0);
+            //socket->writeDatagram(response, dstAddr, dstPort);
             emit datagramReceived(rref,freq);
         }
     });
