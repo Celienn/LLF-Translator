@@ -4,16 +4,21 @@
 #include <QWidget>
 #include <string>
 #include <vector>
+#include <QVector3D>
 #include <QThread>
 #include <windows.h>
 #include <SimConnect.h>
 #include <QFile>
 #include <udpworker.h>
+#include <dataref.h>
 
 using namespace std;
 
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
+// TODO : Use QString instead of string
+// TODO : Use QHash instead of map
+// TODO : Check that all include are necessary
 class LLFTranslator : public QObject
 {
 
@@ -62,7 +67,7 @@ class LLFTranslator : public QObject
         const char* getXPlaneUnit(string ref);
     private:
         vector<string> config;
-        vector<string> variables;
+        QList<Dataref*> variables;
         bool connected;
         HANDLE hSimConnect;
         HRESULT hr;

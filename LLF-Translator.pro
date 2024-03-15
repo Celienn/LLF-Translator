@@ -13,12 +13,14 @@ SOURCES += \
     main.cpp \
     src/llftranslator.cpp \
     src/mainwindow.cpp \
-    src/udpworker.cpp
+    src/udpworker.cpp \
+    src/dataref.cpp
 
 HEADERS += \
     src/llftranslator.h \
     src/mainwindow.h \
-    src/udpworker.h
+    src/udpworker.h \
+    src/dataref.h
 
 FORMS += \
     src/mainwindow.ui

@@ -16,16 +16,18 @@ LLFTranslator::~LLFTranslator()
 
 }
 
+// TODO : Use QString instead of string
 void LLFTranslator::addVariable(const string &var, int frequency)
 {
-    variables.push_back(var);
+    Dataref* dataref = new Dataref(QString::fromStdString(var), frequency, 0.0);
+    variables.append(dataref);
     qDebug() << "Adding variable " << QString::fromStdString(var) << " with frequency " << frequency << "Hz";
-    readVar<double>(translateXPlaneToMFS(var.c_str()), getXPlaneUnit(var.c_str()), SIMCONNECT_DATATYPE_FLOAT64, [this,var](double value) {
-        udpWorker->sendFrame(QString::fromStdString(var),value);
+    readVar<double>(translateXPlaneToMFS(var.c_str()), getXPlaneUnit(var.c_str()), SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
+        dataref->value = value;
     }, frequency);
 }
 
-void LLFTranslator::addVariable(const vector<string> var, int frequency = 0){
+void LLFTranslator::addVariable(const vector<string> var, int frequency){
     for (int i = 0; i < var.size(); i++){
         addVariable(var[i], frequency); 
     }
