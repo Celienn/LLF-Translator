@@ -46,22 +46,21 @@ void UDPWorker::sendFrame(QList<QPair<QString, float>> datagrams)
 {
     QByteArray frame;
 
+    frame.append("RREF,");
+
     for (const auto& datagram : datagrams) {
-        QByteArray datagramFrame = generateDatagram(datagramIdMap[datagram.first], datagram.second);
+        QByteArray datagramFrame = generateDatagram(datagramIdMap[datagram.first], datagram.second, false);
         frame.append(datagramFrame);
     }
 
     socket->writeDatagram(frame, dstAddr, dstPort);
 }
 
-QByteArray UDPWorker::generateDatagram(int id, float value)
+QByteArray UDPWorker::generateDatagram(int id, float value, bool header)
 {
     QByteArray frame;
-    frame.append('R');
-    frame.append('R');
-    frame.append('E');
-    frame.append('F');
-    frame.append(',');
+
+    if (header) frame.append("RREF,");
     frame.append(reinterpret_cast<const char*>(&id), sizeof(int));
     frame.append(reinterpret_cast<const char*>(&value), sizeof(float));
     return frame;

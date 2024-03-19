@@ -24,7 +24,7 @@ class UDPWorker : public QObject
         quint16 dstPort;
         LLFTranslator *parent;
         QHash<QString, int> datagramIdMap;
-        QByteArray generateDatagram(int id, float value);
+        QByteArray generateDatagram(int id, float value, bool header = true);
         
         void parseRREFRequest(QByteArray datagram,int *frequency, int *id, char *rref);
     signals:
