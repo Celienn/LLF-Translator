@@ -18,10 +18,21 @@ LLFTranslator::~LLFTranslator()
 
 void LLFTranslator::addVariable(const QString &var, int frequency)
 {
+    string MFSvarStr = translateXPlaneToMFS(var).toStdString();
+    char* MFSvar = new char[MFSvarStr.length() + 1];
+    strcpy(MFSvar, MFSvarStr.c_str());
+
+    string unitStr = getXPlaneUnit(var).toStdString();
+    char* unit = new char[unitStr.length() + 1];
+    strcpy(unit, unitStr.c_str());
+    
     Dataref* dataref = new Dataref(var, frequency, 0.0);
     variables.append(dataref);
-    qDebug() << "Adding variable " << var << " with frequency " << frequency << "Hz";
-    readVar<double>(translateXPlaneToMFS(var), getXPlaneUnit(var), SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
+
+    if (MFSvarStr == "Not Found" || unitStr == "Not Found") return;
+    qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
+    
+    readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT32, [this,dataref](double value) {
         dataref->value = value;
         qDebug() << "Received value " << value << " for " << dataref->name;
     }, frequency);
@@ -30,11 +41,41 @@ void LLFTranslator::addVariable(const QString &var, int frequency)
 // Merci Copilot :D
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext) {
     LLFTranslator* translator = static_cast<LLFTranslator*>(pContext);
-    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*)pData;
-    DWORD request = pObjData->dwRequestID;
-    qDebug() << "Received data for request " << request;
-    if (translator->callbacks.count(request)) {
-        translator->callbacks[request](pObjData);
+    SIMCONNECT_RECV_EVENT *evt;
+    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData;
+    SIMCONNECT_RECV_EXCEPTION *except;
+    DWORD request;
+
+    switch(pData->dwID) {
+        case SIMCONNECT_RECV_ID_OPEN:
+            qDebug() << "SimConnect connection opened";
+            break;
+
+        case SIMCONNECT_RECV_ID_EVENT:
+            evt = (SIMCONNECT_RECV_EVENT*) pData;
+            qDebug() << "Received event with ID " << evt->uEventID;
+            break;
+
+        case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
+            pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*) pData;
+            request = pObjData->dwRequestID;
+            qDebug() << "Received data for request " << request;
+            if (translator->callbacks.count(request)) {
+                translator->callbacks[request](pObjData);
+            }
+            break;
+
+        case SIMCONNECT_RECV_ID_EXCEPTION:
+            except = (SIMCONNECT_RECV_EXCEPTION*) pData;
+            qDebug() << "SimConnect exception: " << except->dwException;
+            break;
+
+        case SIMCONNECT_RECV_ID_QUIT:
+            qDebug() << "SimConnect connection closed";
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -68,7 +109,6 @@ void LLFTranslator::initUdpWorker()
 }
 
 void LLFTranslator::connect() {
-    HRESULT hr;
     if (SUCCEEDED(SimConnect_Open(&hSimConnect, "LLFTranslator", NULL, 0, 0, 0)))
     {
         connected = true;
@@ -106,23 +146,23 @@ QList<QString> LLFTranslator::loadConfig()
     return list;
 }
 
-char* LLFTranslator::translateXPlaneToMFS(QString ref)
+QString LLFTranslator::translateXPlaneToMFS(QString ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
         if (config[i] == ref)
         {
-            return (char*)(config[i + 1].toStdString()).c_str();
+            return config[i + 1];
         }
     }
     return "Not Found";
 }
 
-char* LLFTranslator::getXPlaneUnit(QString ref)
+QString LLFTranslator::getXPlaneUnit(QString ref)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
         if (config[i] == ref)
         {
-            return (char*)(config[i + 2].toStdString()).c_str();
+            return config[i + 2];
         }
     }
     return "Not Found";
