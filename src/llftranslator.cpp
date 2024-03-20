@@ -32,7 +32,7 @@ void LLFTranslator::addVariable(const QString &var, int frequency)
     if (MFSvarStr == "Not Found" || unitStr == "Not Found") return;
     qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
     
-    readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT32, [this,dataref](double value) {
+    readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
         dataref->value = value;
         qDebug() << "Received value " << value << " for " << dataref->name;
     }, frequency);
