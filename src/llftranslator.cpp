@@ -33,7 +33,7 @@ void LLFTranslator::addVariable(const QString &var, int frequency)
     qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
     
     readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
-        dataref->value = value;
+        dataref->value = applyEquation(dataref->name, value);
         qDebug() << "Received value " << value << " for " << dataref->name;
     }, frequency);
 }
@@ -90,7 +90,7 @@ void LLFTranslator::initUdpWorker()
                     it.value().restart();
 
                     for (Dataref* variable : variables) {
-                        if (variable->frequency == it.key()) {
+                        if (variable->frequency == it.key() && variable->value != 0.0) {
                             datagrams.append(QPair<QString, float>(variable->name, variable->value));
                         }
                     }
@@ -146,29 +146,47 @@ QList<QString> LLFTranslator::loadConfig()
     return list;
 }
 
-QString LLFTranslator::translateXPlaneToMFS(QString ref)
+QString LLFTranslator::readCsvArg(QString dataref,int arg)
 {
     for(int i = 0 ;i < (int)config.size()-1 ;i++){
-        if (config[i] == ref)
+        if (config[i] == dataref)
         {
-            return config[i + 1];
+            return config[i + arg];
         }
     }
     return "Not Found";
 }
 
-QString LLFTranslator::getXPlaneUnit(QString ref)
+void LLFTranslator::onDatagramReceived(char* dataref, int frequency)
 {
-    for(int i = 0 ;i < (int)config.size()-1 ;i++){
-        if (config[i] == ref)
-        {
-            return config[i + 2];
-        }
-    }
-    return "Not Found";
+    addVariable(QString(dataref), frequency);
 }
 
-void LLFTranslator::onDatagramReceived(char* rref, int frequency)
+double LLFTranslator::applyEquation(const QString& dataref,double value)
 {
-    addVariable(QString(rref), frequency);
+    QString equation = getEquation(dataref);
+    equation.replace("value", QString::number(value));
+    
+    std::stringstream ss();
+    double result = 0.0;
+    double number = 0.0;
+    char operation = '+';
+
+    while (ss >> number) {
+        switch (operation) {
+            case '+': result += number; break;
+            case '-': result -= number; break;
+            case '*': result *= number; break;
+            case '/': if (number != 0.0) result /= number; break;
+            default: /* Handle error */ break;
+        }
+
+        ss >> operation;
+    }
+
+    if(dataref == QString("sim/cockpit2/gauges/indicators/altitude_ft_pilot")){
+        qDebug() << "Altitude : " << result;
+    }
+
+    return result;
 }

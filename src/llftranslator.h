@@ -13,6 +13,7 @@
 #include <QElapsedTimer>
 #include <dataref.h>
 #include <QVector>
+#include "exprtk.hpp"
 
 using namespace std;
 
@@ -44,12 +45,11 @@ class LLFTranslator : public QObject
                 T* data = (T*)&pObjData->dwData;
                 callback(*data);
             };
-            qDebug() << "Requesting data for " << QString(MFSvar) << " with definition " << definition << " and request " << request;
             QThread* thread = QThread::create([this, MFSvar, unit, type, frequency, definition, request] {
                 if (!isConnected()) return; 
                 qDebug() << MFSvar;
                 qDebug() << unit;
-                hr = SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
+                HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
                 if (FAILED(hr)) {
                     // Gérer l'erreur
                     qDebug() << "Failed to add to data definition";
@@ -65,9 +65,7 @@ class LLFTranslator : public QObject
                 }
             });
 
-            QObject::connect(thread, &QThread::finished, thread, []{
-                qDebug() << "Thread finished";
-            });
+            QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
             thread->start();
         }
         
@@ -76,20 +74,23 @@ class LLFTranslator : public QObject
         QList<Dataref*> variables;
         bool connected;
         HANDLE hSimConnect;
-        HRESULT hr;
         DWORD nextDefinitionId = 0;
         DWORD nextRequestId = 0;
         map<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
         QHash<int, QElapsedTimer> timers;
+        QHash<QString, function<double(double)>> equations;
         UDPWorker *udpWorker;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
-        QString translateXPlaneToMFS(QString ref);
-        QString getXPlaneUnit(QString ref);
+        QString readCsvArg(QString dataref,int arg);
+        QString translateXPlaneToMFS(QString dataref)   { return readCsvArg(dataref, 1); };
+        QString getXPlaneUnit(QString dataref)          { return readCsvArg(dataref, 2); };
+        QString getEquation(QString dataref)            { return readCsvArg(dataref, 3); };
+        double applyEquation(const QString& dataref,double value);
         QList<QString> loadConfig();
         void initUdpWorker();
     public slots:
-        void onDatagramReceived(char* rref, int frequency);
+        void onDatagramReceived(char* dataref, int frequency);
 };
 
 #endif // LLFTRANSLATOR_H
