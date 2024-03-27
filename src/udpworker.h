@@ -26,7 +26,7 @@ class UDPWorker : public QObject
         QHash<QString, int> datagramIdMap;
         QByteArray generateDatagram(int id, float value, bool header = true);
         
-        void parseRREFRequest(QByteArray datagram,int *frequency, int *id, char *rref);
+        bool parseRREFRequest(QByteArray datagram,int *frequency, int *id, char *rref);
     signals:
         void datagramReceived(char* rref, int frequency);
 

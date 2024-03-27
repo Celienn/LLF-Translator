@@ -1,9 +1,25 @@
-sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE,Feet
-sim/cockpit2/gauges/indicators/vvi_fpm_pilot,VERTICAL SPEED,Feet per minute
-sim/cockpit2/gauges/indicators/airspeed_kts_pilot,AIRSPEED INDICATED,Knots
-sim/cockpit2/electrical/dc_voltmeter_value,ELECTRICAL BUS VOLTAGE,Volts
-sim/flightmodel/engine/ENGN_bat_volt[0],ENG BATTERY VOLTAGE 0,Volts
-sim/cockpit2/electrical/battery_voltage_indicated_volts[0],ELECTRICAL BATTERY VOLTAGE,Volts
-sim/cockpit2/electrical/battery_on,ELECTRICAL MASTER BATTERY SWITCH,N/A
-sim/cockpit2/switches/avionics_power_on,ELECTRICAL MASTER ALTERNATOR SWITCH,N/A
-sim/cockpit2/switches/navigation_lights_on,LIGHTS NAV,N/A
+sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE,Meter,value*3.28084*100
+sim/cockpit2/gauges/indicators/vvi_fpm_pilot,VERTICAL SPEED,Feet per second,value/60*100
+sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot,ATTITUDE INDICATOR BANK DEGREES,Degrees,value
+sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot,ATTITUDE INDICATOR PITCH DEGREES,Degrees,value
+sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot,NAV CDI:1,Degrees,value
+sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot,NAV OBS:1,Degrees,value
+
+sim/cockpit2/clock_timer/local_time_hours,GPS APPROACH TIMEZONE DEVIATION,Seconds,value/3600
+sim/cockpit2/clock_timer/local_time_minutes,GPS APPROACH TIMEZONE DEVIATION,Seconds,value%60
+sim/cockpit2/gauges/indicators/heading_AHARS_deg_mag_pilot,PLANE HEADING DEGREES MAGNETIC,Degrees,value
+sim/cockpit2/engine/indicators/EGT_deg_C[0],ENG EXHAUST GAS TEMPERATURE:1,Celsius,value*100
+sim/flightmodel/weight/m_fuel,FUEL TOTAL QUANTITY,Gallons,value
+sim/cockpit2/temperature/outside_air_temp_degc,AMBIENT TEMPERATURE,Celsius,value
+
+sim/cockpit2/engine/indicators/oil_temperature_deg_C[0],ENG OIL TEMPERATURE:1,Celsius,value*10
+sim/cockpit2/engine/indicators/oil_pressure_psi[0],ENG OIL PRESSURE:1,PSI,value
+sim/cockpit2/engine/indicators/engine_speed_rpm[0],ENG ROTOR RPM:1,RPM,value*1000
+
+sim/cockpit2/gauges/indicators/airspeed_kts_pilot,AIRSPEED INDICATED,Knots,value
+sim/cockpit2/electrical/dc_voltmeter_value,ELECTRICAL BUS VOLTAGE,Volts,value
+sim/flightmodel/engine/ENGN_bat_volt[0],ENG BATTERY VOLTAGE 0,Volts,value
+sim/cockpit2/electrical/battery_voltage_indicated_volts[0],ELECTRICAL BATTERY VOLTAGE,Volts,value
+sim/cockpit2/electrical/battery_on,ELECTRICAL MASTER BATTERY SWITCH,N/A,value
+sim/cockpit2/switches/avionics_power_on,ELECTRICAL MASTER ALTERNATOR SWITCH,N/A,value
+sim/cockpit2/switches/navigation_lights_on,LIGHTS NAV,N/A,value

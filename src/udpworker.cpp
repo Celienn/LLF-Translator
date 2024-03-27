@@ -26,7 +26,7 @@ void UDPWorker::init()
 
             int id, freq;
             char rref[400];
-            parseRREFRequest(datagram, &freq, &id, rref);
+            if (!parseRREFRequest(datagram, &freq, &id, rref)) continue;
             qDebug() << "Received RREF request for " << rref << " with id " << id << " and frequency " << freq << "Hz";
 
             datagramIdMap[rref] = id;
@@ -67,16 +67,16 @@ QByteArray UDPWorker::generateDatagram(int id, float value, bool header)
 }
 
 
-void UDPWorker::parseRREFRequest(QByteArray datagram, int *frequency, int *id, char *rref)
+bool UDPWorker::parseRREFRequest(QByteArray datagram, int *frequency, int *id, char *rref)
 {
     if (datagram.size() < 13 || datagram.size() > 413){
         qDebug() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
-        return;
+        return false;
     }
 
     if (!datagram.startsWith("RREF")) {
         qDebug() << "Invalid datagram : does not start with 'RREF'";
-        return;
+        return false;
     }
 
     memcpy(frequency,   datagram.data() + 5, 4);
@@ -84,4 +84,5 @@ void UDPWorker::parseRREFRequest(QByteArray datagram, int *frequency, int *id, c
     memcpy(rref,        datagram.data() + 13, datagram.size() - 13);
     
     rref[datagram.size() - 13] = '\0';
+    return true;
 };

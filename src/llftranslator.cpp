@@ -34,7 +34,6 @@ void LLFTranslator::addVariable(const QString &var, int frequency)
     
     readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
         dataref->value = applyEquation(dataref->name, value);
-        qDebug() << "Received value " << value << " for " << dataref->name;
     }, frequency);
 }
 
@@ -59,7 +58,6 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
         case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
             pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*) pData;
             request = pObjData->dwRequestID;
-            qDebug() << "Received data for request " << request;
             if (translator->callbacks.count(request)) {
                 translator->callbacks[request](pObjData);
             }
@@ -162,12 +160,13 @@ void LLFTranslator::onDatagramReceived(char* dataref, int frequency)
     addVariable(QString(dataref), frequency);
 }
 
+// Ne prend pas en compte les priorités des opération
 double LLFTranslator::applyEquation(const QString& dataref,double value)
 {
     QString equation = getEquation(dataref);
     equation.replace("value", QString::number(value));
     
-    std::stringstream ss();
+    std::stringstream ss(equation.toStdString());
     double result = 0.0;
     double number = 0.0;
     char operation = '+';
@@ -178,14 +177,11 @@ double LLFTranslator::applyEquation(const QString& dataref,double value)
             case '-': result -= number; break;
             case '*': result *= number; break;
             case '/': if (number != 0.0) result /= number; break;
+            case '%': result = static_cast<int>(result) % static_cast<int>(number); break;
             default: /* Handle error */ break;
         }
 
         ss >> operation;
-    }
-
-    if(dataref == QString("sim/cockpit2/gauges/indicators/altitude_ft_pilot")){
-        qDebug() << "Altitude : " << result;
     }
 
     return result;

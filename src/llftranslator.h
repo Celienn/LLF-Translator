@@ -13,7 +13,6 @@
 #include <QElapsedTimer>
 #include <dataref.h>
 #include <QVector>
-#include "exprtk.hpp"
 
 using namespace std;
 
@@ -47,12 +46,9 @@ class LLFTranslator : public QObject
             };
             QThread* thread = QThread::create([this, MFSvar, unit, type, frequency, definition, request] {
                 if (!isConnected()) return; 
-                qDebug() << MFSvar;
-                qDebug() << unit;
                 HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
                 if (FAILED(hr)) {
-                    // Gérer l'erreur
-                    qDebug() << "Failed to add to data definition";
+                    qDebug() << "Failed to add to data definition : " << MFSvar;
                 }
                 if (!timers.contains(frequency)) timers[frequency].start();
                 
