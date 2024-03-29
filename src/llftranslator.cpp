@@ -177,7 +177,7 @@ double LLFTranslator::applyEquation(const QString& dataref,double value)
             case '-': result -= number; break;
             case '*': result *= number; break;
             case '/': if (number != 0.0) result /= number; break;
-            case '%': result = static_cast<int>(result) % static_cast<int>(number); break;
+            case '%': result = fmod(result,number); break;
             default: /* Handle error */ break;
         }
 

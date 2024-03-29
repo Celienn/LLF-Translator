@@ -13,6 +13,7 @@
 #include <QElapsedTimer>
 #include <dataref.h>
 #include <QVector>
+#include <cmath>
 
 using namespace std;
 
@@ -52,10 +53,10 @@ class LLFTranslator : public QObject
                 }
                 if (!timers.contains(frequency)) timers[frequency].start();
                 
+                SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+                    
                 while(true) 
                 {
-                    SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-                    
                     SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
                     QThread::msleep(1000);
                 }
