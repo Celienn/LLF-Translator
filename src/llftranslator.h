@@ -55,10 +55,10 @@ class LLFTranslator : public QObject
                 
                 SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
                     
-                while(true) 
+                while(callbacks[request] != nullptr) 
                 {
                     SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
-                    QThread::msleep(1000);
+                    QThread::msleep(1000/frequency);
                 }
             });
 
@@ -75,7 +75,6 @@ class LLFTranslator : public QObject
         DWORD nextRequestId = 0;
         map<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
         QHash<int, QElapsedTimer> timers;
-        QHash<QString, function<double(double)>> equations;
         UDPWorker *udpWorker;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
@@ -85,9 +84,10 @@ class LLFTranslator : public QObject
         QString getEquation(QString dataref)            { return readCsvArg(dataref, 3); };
         double applyEquation(const QString& dataref,double value);
         QList<QString> loadConfig();
+        void removeVariable(const QString &var, int id);
         void initUdpWorker();
     public slots:
-        void onDatagramReceived(char* dataref, int frequency);
+        void onDatagramReceived(char* dataref, int frequency, int id);
 };
 
 #endif // LLFTRANSLATOR_H

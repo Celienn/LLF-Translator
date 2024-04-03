@@ -37,6 +37,22 @@ void LLFTranslator::addVariable(const QString &var, int frequency)
     }, frequency);
 }
 
+void LLFTranslator::removeVariable(const QString &var, int id)
+{
+    qDebug() << "Removing variable " << var << " with id " << id;
+    
+    for (int i = 0; i < variables.size(); i++) {
+        if (variables[i]->name == var) {
+            variables.removeAt(i);
+            break;
+        }
+    }
+
+    callbacks[id] = nullptr;
+
+    // TODO : Remove from timers 
+}
+
 // Merci Copilot :D
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext) {
     LLFTranslator* translator = static_cast<LLFTranslator*>(pContext);
@@ -59,6 +75,7 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
             pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*) pData;
             request = pObjData->dwRequestID;
             if (translator->callbacks.count(request)) {
+                if (translator->callbacks[request] == nullptr) return;
                 translator->callbacks[request](pObjData);
             }
             break;
@@ -88,7 +105,7 @@ void LLFTranslator::initUdpWorker()
                     it.value().restart();
 
                     for (Dataref* variable : variables) {
-                        if (variable->frequency == it.key() && variable->value != 0.0) {
+                        if (variable->frequency == it.key()) {
                             datagrams.append(QPair<QString, float>(variable->name, variable->value));
                         }
                     }
@@ -155,9 +172,11 @@ QString LLFTranslator::readCsvArg(QString dataref,int arg)
     return "Not Found";
 }
 
-void LLFTranslator::onDatagramReceived(char* dataref, int frequency)
+void LLFTranslator::onDatagramReceived(char* dataref, int frequency, int id)
 {
-    addVariable(QString(dataref), frequency);
+    qDebug() << "frequency : " << frequency << " cond : " << (frequency <= 0);
+    if ( frequency <= 0 ) removeVariable(dataref, id);
+    else addVariable(QString(dataref), frequency);
 }
 
 // Ne prend pas en compte les priorités des opération

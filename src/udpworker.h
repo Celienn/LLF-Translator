@@ -28,7 +28,7 @@ class UDPWorker : public QObject
         
         bool parseRREFRequest(QByteArray datagram,int *frequency, int *id, char *rref);
     signals:
-        void datagramReceived(char* rref, int frequency);
+        void datagramReceived(char* rref, int frequency, int id);
 
 };
 

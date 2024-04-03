@@ -17,21 +17,23 @@ void UDPWorker::init()
 {
     if (parent == nullptr) return;
 
-    connect(socket, &QUdpSocket::readyRead, [&]() {
+    connect(socket, &QUdpSocket::readyRead, [=]() {
 
         while (socket->hasPendingDatagrams()) {
             QByteArray datagram;
             datagram.resize(socket->pendingDatagramSize());
+            if(!datagram.size() && !socket->pendingDatagramSize()) break;
+            
             socket->readDatagram(datagram.data(), datagram.size(), &dstAddr, &dstPort);
 
             int id, freq;
             char rref[400];
             if (!parseRREFRequest(datagram, &freq, &id, rref)) continue;
             qDebug() << "Received RREF request for " << rref << " with id " << id << " and frequency " << freq << "Hz";
-
+            
             datagramIdMap[rref] = id;
 
-            emit datagramReceived(rref,freq);
+            emit datagramReceived(rref,freq,id);
         }
     });
 }
