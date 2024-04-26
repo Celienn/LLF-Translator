@@ -94,11 +94,24 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
     }
 }
 
+void LLFTranslator::initSimReader()
+{
+    QThread* thread = QThread::create([this] {
+        while (connected) {
+            SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
+            QThread::msleep(1000/maxFrequency);
+        }
+    });
+
+    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
+}
+
 void LLFTranslator::initUdpWorker()
 {
     QThread* thread = QThread::create([this] {
         QList<QPair<QString, float>> datagrams;
-        while (true) {
+        while (connected) {
             datagrams.clear();
             for (auto it = timers.begin(); it != timers.end(); it++) {
                 if (it.value().elapsed() >= 1000 / it.key()) {
@@ -112,8 +125,8 @@ void LLFTranslator::initUdpWorker()
                 }
             }
             udpWorker->sendFrame(datagrams);
-            // Sleep for 50ms so it executes at 20Hz 
-            QThread::msleep(1000/20);
+            // Sleep for 50ms so it executes at maxFrequency 
+            QThread::msleep(1000/maxFrequency);
         }
     });
 
@@ -128,6 +141,7 @@ void LLFTranslator::connect() {
     {
         connected = true;
         qDebug() << "Connected to MFS!";
+        initSimReader();
         initUdpWorker();
     }
     else

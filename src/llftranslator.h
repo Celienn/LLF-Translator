@@ -1,11 +1,7 @@
 #ifndef LLFTRANSLATOR_H
 #define LLFTRANSLATOR_H
 
-#include <string>
-#include <vector>
-#include <QVector3D>
 #include <QThread>
-#include <QWidget>
 #include <QFile>
 #include <windows.h>
 #include <SimConnect.h>
@@ -19,12 +15,6 @@ using namespace std;
 
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
-// TODO : Use QString instead of string
-// TODO : Use QHash instead of map
-// TODO : Check that all include are necessary
-// TODO : Use QElapsedTimer instead of QTime
-// TODO : Use QHast instead of map
-
 class LLFTranslator : public QObject
 {
 
@@ -36,34 +26,23 @@ class LLFTranslator : public QObject
         void connect();
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
-        // TODO : use QHash and QString
         template <typename T>
         void readVar(const char * MFSvar, const char * unit, SIMCONNECT_DATATYPE type, function<void(T)> callback, int frequency){
+            if (!isConnected()) return;
             DWORD definition = nextDefinitionId++;
             DWORD request = nextRequestId++;
             callbacks[request] = [callback, this, request, frequency](SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData){
                 T* data = (T*)&pObjData->dwData;
                 callback(*data);
             };
-            QThread* thread = QThread::create([this, MFSvar, unit, type, frequency, definition, request] {
-                if (!isConnected()) return; 
-                HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
-                if (FAILED(hr)) {
-                    qDebug() << "Failed to add to data definition : " << MFSvar;
-                }
-                if (!timers.contains(frequency)) timers[frequency].start();
-                
-                SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
-                    
-                while(callbacks[request] != nullptr) 
-                {
-                    SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
-                    QThread::msleep(1000/frequency);
-                }
-            });
-
-            QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-            thread->start();
+            
+            HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, MFSvar, unit, type);
+            if (FAILED(hr)) {
+                qDebug() << "Failed to add to data definition : " << MFSvar;
+            }
+            if (!timers.contains(frequency)) timers[frequency].start();
+            
+            SimConnect_RequestDataOnSimObject(hSimConnect, request, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
         }
         
     private:
@@ -73,7 +52,8 @@ class LLFTranslator : public QObject
         HANDLE hSimConnect;
         DWORD nextDefinitionId = 0;
         DWORD nextRequestId = 0;
-        map<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
+        int maxFrequency = 20;
+        QHash<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
         QHash<int, QElapsedTimer> timers;
         UDPWorker *udpWorker;
         
@@ -86,6 +66,7 @@ class LLFTranslator : public QObject
         QList<QString> loadConfig();
         void removeVariable(const QString &var, int id);
         void initUdpWorker();
+        void initSimReader();
     public slots:
         void onDatagramReceived(char* dataref, int frequency, int id);
 };
