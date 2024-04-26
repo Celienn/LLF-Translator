@@ -43,14 +43,14 @@ void LLFTranslator::removeVariable(const QString &var, int id)
     
     for (int i = 0; i < variables.size(); i++) {
         if (variables[i]->name == var) {
+            delete variables[i];
+            variables[i] = nullptr;
             variables.removeAt(i);
             break;
         }
     }
 
-    callbacks[id] = nullptr;
-
-    // TODO : Remove from timers 
+    callbacks.remove(id);
 }
 
 // Merci Copilot :D
@@ -125,7 +125,7 @@ void LLFTranslator::initUdpWorker()
                 }
             }
             udpWorker->sendFrame(datagrams);
-            // Sleep for 50ms so it executes at maxFrequency 
+
             QThread::msleep(1000/maxFrequency);
         }
     });

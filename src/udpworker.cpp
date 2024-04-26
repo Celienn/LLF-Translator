@@ -46,6 +46,7 @@ void UDPWorker::sendFrame(QString dataref, float value)
 
 void UDPWorker::sendFrame(QList<QPair<QString, float>> datagrams)
 {
+    if (datagrams.isEmpty()) return;
     QByteArray frame;
 
     frame.append("RREF,");

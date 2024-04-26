@@ -67,6 +67,7 @@ class LLFTranslator : public QObject
         void removeVariable(const QString &var, int id);
         void initUdpWorker();
         void initSimReader();
+        
     public slots:
         void onDatagramReceived(char* dataref, int frequency, int id);
 };
