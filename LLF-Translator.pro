@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -10,13 +10,21 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    llftranslator.cpp
+    src/globaldata.cpp \
+    src/graphicalview.cpp \
+    src/llftranslator.cpp \
+    src/mainwindow.cpp
 
 HEADERS += \
-    llftranslator.h
+    src/circularbuffer.h \
+    src/globaldata.h \
+    src/graphicalview.h \
+    src/llftranslator.h \
+    src/mainwindow.h
 
 FORMS += \
-    llftranslator.ui
+    src/graphicalview.ui \
+    src/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
