@@ -25,7 +25,7 @@ HEADERS += \
     src/llftranslator.h \
     src/mainwindow.h \
     src/udpworker.h \
-    src/dataref.h
+    src/dataref.h 
 
 FORMS += \
     src/graphicalview.ui \

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>secondwindow</class>
- <widget class="QDialog" name="secondwindow">
+ <class>graphicalview</class>
+ <widget class="QDialog" name="graphicalview">
   <property name="geometry">
    <rect>
     <x>0</x>

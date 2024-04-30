@@ -45,9 +45,9 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 
     QString itemname = item->text().remove("\"");
     qDebug() << itemname.toStdString();
-    secondwindow *secondWindow = new secondwindow(this,itemname.toStdString(),&value);
+    graphicalview *GraphicalView = new graphicalview(this,itemname.toStdString(),&value);
     // Show the second window
-    secondWindow->show();
+    GraphicalView->show();
 }
 
 
