@@ -1,16 +1,18 @@
-#include "src/mainwindow.h"
+#include "mainwindow.h"
+#include "llftranslator.h"
 #include <QApplication>
-#include "src/globaldata.h"
-#include <random>
-#include <iostream>
+#include <QDebug>
+#include "globaldata.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
     w.setWindowTitle("LLF Translator Debugger");
-    std::random_device rd;
-    std::mt19937 gen(rd());
+
+    LLFTranslator llf;
+    llf.connect();
+
 
     return a.exec();
 }
