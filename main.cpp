@@ -6,13 +6,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    w.setWindowTitle("LLF Translator Debugger");
-
+    
     LLFTranslator llf;
     llf.connect();
-
 
     return a.exec();
 }

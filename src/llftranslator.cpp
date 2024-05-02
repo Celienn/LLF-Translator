@@ -9,6 +9,9 @@ LLFTranslator::LLFTranslator()
 {
     config = loadConfig();
     udpWorker = new UDPWorker(this);
+    w = new MainWindow(this);
+    w->show();
+    w->setWindowTitle("LLF Translator");
 }
 
 LLFTranslator::~LLFTranslator()

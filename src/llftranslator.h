@@ -10,6 +10,7 @@
 #include <dataref.h>
 #include <QVector>
 #include <cmath>
+#include "mainwindow.h"
 
 using namespace std;
 
@@ -56,6 +57,7 @@ class LLFTranslator : public QObject
         QHash<DWORD, function<void(SIMCONNECT_RECV_SIMOBJECT_DATA*)>> callbacks;
         QHash<int, QElapsedTimer> timers;
         UDPWorker *udpWorker;
+        MainWindow *w;
         
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         QString readCsvArg(QString dataref,int arg);

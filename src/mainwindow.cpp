@@ -6,9 +6,7 @@
 #include <QCoreApplication>
 #include <QHostAddress>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+void MainWindow::init()
 {
     ui->setupUi(this);
     ui->Table->setRowCount(23);
@@ -29,10 +27,23 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
     }
+}
 
 
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    init();
+}
 
- }
+MainWindow::MainWindow(LLFTranslator *translator, QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow) 
+{
+    m_LLFTranslator = translator;
+    init();
+}
 
 MainWindow::~MainWindow()
 {

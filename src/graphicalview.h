@@ -11,7 +11,6 @@
 #include <QPoint>
 #include <QMouseEvent>
 #include <QRandomGenerator>
-#include "circularbuffer.h"
 #include <cmath>
 #include <QBrush>
 
@@ -55,14 +54,5 @@ class graphicalview : public QDialog
     protected:
         void mouseMoveEvent(QMouseEvent *event);
 };
-
-/*typedef struct
-{
-    double min;
-    double max;
-    float pas;
-    int inc;
-    char label[512];
-}t_axe;*/
 
 #endif // GRAPHICALVIEW_H
