@@ -54,6 +54,9 @@ void LLFTranslator::addVariable(const QString &var, int frequency, int id)
     if (MSFSvarStr == "Not Found" || unitStr == "Not Found") return;
     qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
     
+    w->Data->getParent()->listWidget->addItem(MSFSvar);
+    w->Data->addPointers(variables.values());
+
     readVar(dataref, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
         dataref->value = applyEquation(dataref->name, value);
     }, frequency);
@@ -66,6 +69,7 @@ void LLFTranslator::removeVariable(int id)
 
     qDebug() << "Removing variable " << dataref->name << " with id " << id;
 
+    w->Data->removeFromList(dataref->MSFSvar);
     variables.remove(id);
 }
 

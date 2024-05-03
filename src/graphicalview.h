@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QPainter>
+#include <QString>
 #include "circularbuffer.h"
 #include <QTimer>
 #include "ui_graphicalview.h"
@@ -30,7 +31,7 @@ class graphicalview : public QDialog
     Q_OBJECT
 
     public:
-        explicit graphicalview(QWidget *parent = nullptr, std::string id = "caca" , int* pointer = nullptr);
+        explicit graphicalview(QWidget *parent, QString id, double* pointer);
         ~graphicalview();
         virtual void paintEvent(QPaintEvent *event);
         void repere(double xmin,double xmax,double ymin,double ymax, double xpas,double ypas);
@@ -47,7 +48,7 @@ class graphicalview : public QDialog
         QTimer *Timer;
         QPoint mousepos;
         int accumulatetest;
-        int* vptr;
+        double* vptr;
         int count;
         int timercount;
         int fps;

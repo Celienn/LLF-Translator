@@ -14,18 +14,18 @@ class GlobalData {
 
     public:
         GlobalData(Ui::MainWindow* parent = nullptr);
-        void trackVariable(QString key, double* value);
-        void unTrackVariable(QString key);
         void initCollumn();
         void initData(QList<Dataref*> DListe);
         void setcase(int i, int row, QString text);
-        double getValue(QString key);
-        QHash<QString, double*> getHash(){ return hash; };
+        void removeFromList(const char * key);
+        void addPointers(QList<Dataref*> DListe);
+        QHash<QString, double*> getPointers(){ return pts; };
+        Ui::MainWindow* getParent() { return parent; };
 
     private:
-        QHash<QString, double*> hash;
         QStringList Titles;
         Ui::MainWindow* parent;
+        QHash<QString, double*> pts;
 };
 
 #endif // GLOBALDATA_H

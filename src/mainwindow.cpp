@@ -1,6 +1,6 @@
-#include "src/mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "src/graphicalview.h"
+#include "graphicalview.h"
 #include <iostream>
 #include <QCoreApplication>
 #include <QHostAddress>
@@ -55,52 +55,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 {
-    int value = 10;
+    QString itemname = item->text();
 
-    QString itemname = item->text().remove("\"");
-    qDebug() << itemname.toStdString();
-    graphicalview *GraphicalView = new graphicalview(this,itemname.toStdString(),&value);
-    // Show the second window
+    double* ptr = Data->getPointers()[itemname];
+    if (ptr == nullptr) return;
+    
+    graphicalview *GraphicalView = new graphicalview(this,itemname,ptr);
     GraphicalView->show();
 }
 
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->listWidget->clear();
-
-    //QTableWidgetItem *pCell = ui->Table->item(0, 0);
-
-    //double var = 452.0;
-
     GlobalData* Data = new GlobalData(ui);
-
     Data->initCollumn();
-
-/*
-    for (int i = 1;i < 23 ; i++)
-    {
-        QString IStr = QString::number(i);
-        qDebug() << obj->getValue(IStr);
-
-      QHashIterator<QString, double*> k(obj->getHash());
-        while (k.hasNext()) {
-            k.next();
-            qDebug() << qPrintable(k.key()) << ": " << *k.value();
-            ui->listWidget->addItem(k.key());
-        }
-
-        pCell = new QTableWidgetItem;
-        ui->Table->setItem(i, 0, pCell);
-        pCell->setText(IStr);
-    }
-*/
-
-
-    QHashIterator<QString, double*> i(Data->getHash());
-    while (i.hasNext()) {
-        i.next();
-        qDebug() << qPrintable(i.key()) << ": " << *i.value();
-        ui->listWidget->addItem(i.key());
-    }
 }

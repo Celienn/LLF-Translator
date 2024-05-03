@@ -1,21 +1,6 @@
 #include "graphicalview.h"
-#include "ui_graphicalview.h"
-#include "globaldata.h"
-#include <QPainter>
-#include <QPoint>
-#include <QMouseEvent>
-#include <QRandomGenerator>
-#include "circularbuffer.h"
-#include <cmath>
-#include <QBrush>
 
-#define LARGEURVUE 1000
-#define HAUTEURVUE 1000
-#define nbpoints 50
-#define RESOLUTION 35
-#define DELAY 50 // delay between  value asking.
-
-graphicalview::graphicalview(QWidget *parent,std::string id,int* pointer)
+graphicalview::graphicalview(QWidget *parent, QString id, double* pointer)
     : QDialog(parent)
     , ui(new Ui::graphicalview)
 {
@@ -25,10 +10,9 @@ graphicalview::graphicalview(QWidget *parent,std::string id,int* pointer)
     connect(Timer,SIGNAL(timeout()),this,SLOT(Timer_Timeout_Event_Slot()));
     Timer->setInterval(DELAY);
     Timer->start();
-    this->setWindowTitle(QString::fromStdString(id));
+    this->setWindowTitle(id);
     accumulatetest = 0;
     setMouseTracking(true);
-    qDebug() << *pointer;
     vptr = pointer;
 }
 
@@ -44,10 +28,8 @@ void graphicalview::mouseMoveEvent(QMouseEvent *event)
 
 void graphicalview::Timer_Timeout_Event_Slot()
 {
-    accumulatetest = accumulatetest+*vptr+QRandomGenerator::global()->bounded(-2, 7000);
-
-    buffer->insertnewvalue(accumulatetest);
-
+    qDebug() << *vptr;
+    buffer->insertnewvalue(*vptr);
 }
 
 void graphicalview::cubicBezier(QPainter& paint, QList<QPoint>& pts )
