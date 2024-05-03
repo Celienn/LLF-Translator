@@ -11,6 +11,7 @@
 #include <QVector>
 #include <cmath>
 #include "mainwindow.h"
+#include "globaldata.h"
 
 #define maxFrequency 20
 

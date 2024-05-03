@@ -112,6 +112,7 @@ void LLFTranslator::initSimReader()
     QThread* thread = QThread::create([this] {
         while (connected) {
             SimConnect_CallDispatch(hSimConnect, DispatchProcRD, &variables);
+            w->Data->initData(variables.values());
             QThread::msleep(1000/maxFrequency);
         }
     });

@@ -6,9 +6,9 @@
 #include <string>
 #include <QtNetwork>
 #include <QtCore>
-#include "globaldata.h"
 
 class LLFTranslator;
+class GlobalData;
 
 QT_BEGIN_NAMESPACE
 
@@ -26,15 +26,18 @@ class MainWindow : public QMainWindow
         MainWindow(LLFTranslator *translator, QWidget *parent = nullptr);
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-
+        
+        GlobalData* Data;
+        
     private slots:
-
         void on_listWidget_itemClicked(QListWidgetItem *item);
         void on_pushButton_clicked();
 
-private:
-    Ui::MainWindow *ui;
-    GlobalData* Data;
+    private:
+        Ui::MainWindow *ui;
+        LLFTranslator *m_LLFTranslator;
+
+        void init();
 
 };
 

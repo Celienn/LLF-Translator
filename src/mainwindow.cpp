@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     init();
-    Data = new GlobalData();
+    Data = new GlobalData(ui);
 }
 
 MainWindow::MainWindow(LLFTranslator *translator, QWidget *parent)
@@ -45,7 +45,7 @@ MainWindow::MainWindow(LLFTranslator *translator, QWidget *parent)
 {
     m_LLFTranslator = translator;
     init();
-    Data = new GlobalData();
+    Data = new GlobalData(ui);
 }
 
 MainWindow::~MainWindow()
@@ -73,9 +73,9 @@ void MainWindow::on_pushButton_clicked()
 
     //double var = 452.0;
 
-    GlobalData* Data = new GlobalData();
+    GlobalData* Data = new GlobalData(ui);
 
-    Data->initCollumn(ui);
+    Data->initCollumn();
 
 /*
     for (int i = 1;i < 23 ; i++)

@@ -1,5 +1,5 @@
 #include "graphicalview.h"
-#include "ui_secondwindow.h"
+#include "ui_graphicalview.h"
 #include "globaldata.h"
 #include <QPainter>
 #include <QPoint>
@@ -15,7 +15,7 @@
 #define RESOLUTION 35
 #define DELAY 50 // delay between  value asking.
 
-secondwindow::secondwindow(QWidget *parent,std::string id,int* pointer)
+graphicalview::graphicalview(QWidget *parent,std::string id,int* pointer)
     : QDialog(parent)
     , ui(new Ui::graphicalview)
 {

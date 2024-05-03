@@ -4,21 +4,10 @@
 #include "QTableWidgetItem"
 #include "src/dataref.h"
 
-GlobalData::GlobalData()
+GlobalData::GlobalData(Ui::MainWindow* parent)
 {
     Titles << "Name" << "Value" << "Unit" << "Frequency";
-
-    Dataref d1("d1",1,10,"m/s");
-    Dataref d2("d2",2,20,"radian");
-    DListe.append(d1);
-    DListe.append(d2);
-
-    qDebug() << DListe.size() << "Init";
-
-    /*double var = 0.152;
-
-    hash["oui"] = &var;
-    qDebug() << *hash["oui"];*/
+    this->parent = parent;
 }
 
 void GlobalData::trackVariable(QString key, double* value){
@@ -40,43 +29,32 @@ double GlobalData::getValue(QString key){
 }
 
 
-void GlobalData::setcase(Ui::MainWindow *ui,int i , int row, QString text){
-    QTableWidgetItem *pCell = ui->Table->item(0, 0);
+void GlobalData::setcase(int i , int row, QString text){
+    QTableWidgetItem *pCell = parent->Table->item(0, 0);
     pCell = new QTableWidgetItem;
-    ui->Table->setItem(i, row, pCell);
+    parent->Table->setItem(i, row, pCell);
     pCell->setText(text);
 }
 
 
-void GlobalData::initData(Ui::MainWindow *ui){
+void GlobalData::initData(QList<Dataref*> DListe){
 
     qDebug() << DListe.size();
-    QTableWidgetItem *pCell = ui->Table->item(0, 0);
+    QTableWidgetItem *pCell = parent->Table->item(0, 0);
     for (int i = 0; i < DListe.size(); ++i) {
 
-        setcase(ui,i,0,DListe[i].getName());
+        setcase(i,0,DListe[i]->name);
 
-        setcase(ui,i,1,QString::number(DListe[i].getValue()));
+        setcase(i,1,QString::number(DListe[i]->value));
 
-        setcase(ui,i,2,DListe[i].getUnit());
+        setcase(i,2,DListe[i]->unit);
 
-        setcase(ui,i,3,QString::number(DListe[i].getFrequency()));
+        setcase(i,3,QString::number(DListe[i]->frequency));
 
     }
 }
 
-void GlobalData::initCollumn(Ui::MainWindow *ui){
-    ui->Table->setColumnCount(Titles.size());
-    ui->Table->setHorizontalHeaderLabels(Titles);
-
-    initData(ui);
-
-    /*QTableWidgetItem *pCell = ui->Table->item(0, 0);
-    for (int i = 0; i < Titles.size(); ++i) {
-
-        pCell = new QTableWidgetItem;
-        ui->Table->setItem(0, i, pCell);
-        pCell->setText(Titles[i]);
-
-    }*/
+void GlobalData::initCollumn(){
+    parent->Table->setColumnCount(Titles.size());
+    parent->Table->setHorizontalHeaderLabels(Titles);
 }
