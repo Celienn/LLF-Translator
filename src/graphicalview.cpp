@@ -1,23 +1,8 @@
-#include "graphicalview.h"
-#include "ui_secondwindow.h"
-#include "globaldata.h"
-#include <QPainter>
-#include <QPoint>
-#include <QMouseEvent>
-#include <QRandomGenerator>
-#include "circularbuffer.h"
-#include <cmath>
-#include <QBrush>
+#include "src/graphicalview.h"
 
-#define LARGEURVUE 1000
-#define HAUTEURVUE 1000
-#define nbpoints 50
-#define RESOLUTION 35
-#define DELAY 50 // delay between  value asking.
-
-secondwindow::secondwindow(QWidget *parent,std::string id,int* pointer)
+graphicalview::graphicalview(QWidget *parent,std::string id,int* pointer)
     : QDialog(parent)
-    , ui(new Ui::secondwindow)
+    , ui(new Ui::graphicalview)
 {
     ui->setupUi(this);
     buffer = new CircularBuffer(nbpoints);
@@ -31,24 +16,18 @@ secondwindow::secondwindow(QWidget *parent,std::string id,int* pointer)
     qDebug() << *pointer;
     vptr = pointer;
 }
-int count;
-int timercount;
-int fps;
-secondwindow::~secondwindow()
+
+graphicalview::~graphicalview()
 {
     delete ui;
 }
-
-double distance(QPoint p1, QPoint p2) {
-    return std::sqrt(std::pow((p2.x() - p1.x()), 2) + std::pow((p2.y() - p1.y() ), 2));
-}
-
-void secondwindow::mouseMoveEvent(QMouseEvent *event)
+ 
+void graphicalview::mouseMoveEvent(QMouseEvent *event)
 {
     mousepos = event->pos();
 }
 
-void secondwindow::Timer_Timeout_Event_Slot()
+void graphicalview::Timer_Timeout_Event_Slot()
 {
     accumulatetest = accumulatetest+*vptr+QRandomGenerator::global()->bounded(-2, 7000);
 
@@ -56,7 +35,7 @@ void secondwindow::Timer_Timeout_Event_Slot()
 
 }
 
-void secondwindow::cubicBezier(QPainter& paint, QList<QPoint>& pts )
+void graphicalview::cubicBezier(QPainter& paint, QList<QPoint>& pts )
 {
     paint.save() ;
     paint.setPen( QPen(Qt::red, 2 ) ) ;
@@ -108,7 +87,7 @@ void secondwindow::cubicBezier(QPainter& paint, QList<QPoint>& pts )
     paint.restore() ;
 }
 
-void secondwindow::traceCourbe(QPainter& paint, QList<QPoint>& points )
+void graphicalview::traceCourbe(QPainter& paint, QList<QPoint>& points )
 {
     for ( int i = 0; i < points.size() - 2 ; i+=2 ){
         QList<QPoint> pts;
@@ -119,7 +98,7 @@ void secondwindow::traceCourbe(QPainter& paint, QList<QPoint>& points )
 
 
 
-void secondwindow::repere(double xmin,double xmax,double ymin,double ymax, double xpas,double ypas) {
+void graphicalview::repere(double xmin,double xmax,double ymin,double ymax, double xpas,double ypas) {
     QPainter myline(this);
     double offsetX = (width()/(fabs(xmin)+fabs(xmax)))*fabs(xmin);
     double offsetY = (height()/(fabs(ymin)+fabs(ymax)))*fabs(ymax);
@@ -177,7 +156,7 @@ void secondwindow::repere(double xmin,double xmax,double ymin,double ymax, doubl
     //xamTextOut( offsetX+10 , 10, p_axeY->label );
 }
 
-void secondwindow::drawCross(QPainter* painter, QPoint pos, int* value,int i)
+void graphicalview::drawCross(QPainter* painter, QPoint pos, int* value,int i)
 {
     painter->drawText(QPoint(pos.x()-7,pos.y()-10),QString::number(*value));
     painter->drawText(QPoint(pos.x()-5,pos.y()-24),QString::number(i));
@@ -186,7 +165,7 @@ void secondwindow::drawCross(QPainter* painter, QPoint pos, int* value,int i)
     painter->drawLine(QPoint(pos.x(),0), QPoint(pos.x(),height())); // y axes
 }
 
-void secondwindow::drawPoints(CircularBuffer* buffer,double xmin,double xmax,double ymin,double ymax)
+void graphicalview::drawPoints(CircularBuffer* buffer,double xmin,double xmax,double ymin,double ymax)
 {
     QPainter paint( this );
     float gradx = (fabs(xmin) + fabs(xmax));
@@ -231,9 +210,8 @@ void secondwindow::drawPoints(CircularBuffer* buffer,double xmin,double xmax,dou
     //qDebug() << points;
 }
 
-void secondwindow::paintEvent(QPaintEvent *event)
+void graphicalview::paintEvent(QPaintEvent *event)
 {
-
    int maxvalue = accumulatetest + (accumulatetest * 0.2);
     //QPainter paint( this );
     repere(buffer->getSize(),1,1,maxvalue, 1,1);
