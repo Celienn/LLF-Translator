@@ -1,10 +1,5 @@
 #include "llftranslator.h"
 
-struct Struct1
-{
-    double altitude;
-};
-
 LLFTranslator::LLFTranslator()
 {
     config = loadConfig();
@@ -16,7 +11,8 @@ LLFTranslator::LLFTranslator()
 
 LLFTranslator::~LLFTranslator()
 {
-
+    delete udpWorker;
+    delete w;
 }
 
 void LLFTranslator::readVar(Dataref* dataref, SIMCONNECT_DATATYPE type, function<void(double)> callback, int frequency){
