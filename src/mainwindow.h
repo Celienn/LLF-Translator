@@ -6,10 +6,12 @@
 #include <string>
 #include <QtNetwork>
 #include <QtCore>
+#include "globaldata.h"
 
 class LLFTranslator;
 
 QT_BEGIN_NAMESPACE
+
 namespace Ui {
     class MainWindow;
 }
@@ -30,11 +32,9 @@ class MainWindow : public QMainWindow
         void on_listWidget_itemClicked(QListWidgetItem *item);
         void on_pushButton_clicked();
 
-    private:
-        Ui::MainWindow *ui;
-        LLFTranslator *m_LLFTranslator;
-
-        void init();
+private:
+    Ui::MainWindow *ui;
+    GlobalData* Data;
 
 };
 

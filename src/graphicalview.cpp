@@ -1,6 +1,21 @@
 #include "graphicalview.h"
+#include "ui_secondwindow.h"
+#include "globaldata.h"
+#include <QPainter>
+#include <QPoint>
+#include <QMouseEvent>
+#include <QRandomGenerator>
+#include "circularbuffer.h"
+#include <cmath>
+#include <QBrush>
 
-graphicalview::graphicalview(QWidget *parent,std::string id,int* pointer)
+#define LARGEURVUE 1000
+#define HAUTEURVUE 1000
+#define nbpoints 50
+#define RESOLUTION 35
+#define DELAY 50 // delay between  value asking.
+
+secondwindow::secondwindow(QWidget *parent,std::string id,int* pointer)
     : QDialog(parent)
     , ui(new Ui::graphicalview)
 {
@@ -21,7 +36,7 @@ graphicalview::~graphicalview()
 {
     delete ui;
 }
- 
+
 void graphicalview::mouseMoveEvent(QMouseEvent *event)
 {
     mousepos = event->pos();
@@ -212,7 +227,6 @@ void graphicalview::drawPoints(CircularBuffer* buffer,double xmin,double xmax,do
 
 void graphicalview::paintEvent(QPaintEvent *event)
 {
-
    int maxvalue = accumulatetest + (accumulatetest * 0.2);
     //QPainter paint( this );
     repere(buffer->getSize(),1,1,maxvalue, 1,1);

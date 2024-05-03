@@ -1,24 +1,24 @@
-#include "mainwindow.h"
+#include "src/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "graphicalview.h"
-#include "globaldata.h"
+#include "src/graphicalview.h"
 #include <iostream>
 #include <QCoreApplication>
 #include <QHostAddress>
+#include <src/dataref.h>
 
 void MainWindow::init()
 {
     ui->setupUi(this);
     ui->Table->setRowCount(23);
-    ui->Table->setColumnCount(7);
+    ui->Table->setColumnCount(0);
     ui->Table->setColumnWidth(0,143);
-    ui->Table->horizontalHeader()->hide();
-    ui->Table->verticalHeader()->hide();
+    //ui->Table->horizontalHeader()->hide();
+    //ui->Table->verticalHeader()->setVerticalHeaderLabels();
 
     QTableWidgetItem *pCell = ui->Table->item(0, 0);
     pCell = new QTableWidgetItem;
     ui->Table->setItem(0, 0, pCell);
-    pCell->setText("test");
+
     for (const QHostAddress &address : QNetworkInterface::allAddresses())
     {
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
@@ -27,6 +27,7 @@ void MainWindow::init()
         }
 
     }
+
 }
 
 
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     init();
+    Data = new GlobalData();
 }
 
 MainWindow::MainWindow(LLFTranslator *translator, QWidget *parent)
@@ -43,6 +45,7 @@ MainWindow::MainWindow(LLFTranslator *translator, QWidget *parent)
 {
     m_LLFTranslator = translator;
     init();
+    Data = new GlobalData();
 }
 
 MainWindow::~MainWindow()
@@ -66,40 +69,35 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->listWidget->clear();
 
-    QTableWidgetItem *pCell = ui->Table->item(0, 0);
+    //QTableWidgetItem *pCell = ui->Table->item(0, 0);
 
-    double var = 452.0;
-    GlobalData* obj = new GlobalData();
-    obj->trackVariable("test", &var);
+    //double var = 452.0;
 
-    obj->trackVariable("altimeter",&var);
+    GlobalData* Data = new GlobalData();
 
-    /*auto allData = GlobalData::getInstance().getAllData();
-    for (const auto& pair : allData) {
-        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
-        ui->listWidget->addItem(QString::fromStdString(pair.first));
-    }*/
+    Data->initCollumn(ui);
 
+/*
     for (int i = 1;i < 23 ; i++)
     {
         QString IStr = QString::number(i);
         qDebug() << obj->getValue(IStr);
 
-/*        QHashIterator<QString, double*> k(obj->getHash());
+      QHashIterator<QString, double*> k(obj->getHash());
         while (k.hasNext()) {
             k.next();
             qDebug() << qPrintable(k.key()) << ": " << *k.value();
             ui->listWidget->addItem(k.key());
         }
-*/
+
         pCell = new QTableWidgetItem;
         ui->Table->setItem(i, 0, pCell);
         pCell->setText(IStr);
     }
+*/
 
 
-
-    QHashIterator<QString, double*> i(obj->getHash());
+    QHashIterator<QString, double*> i(Data->getHash());
     while (i.hasNext()) {
         i.next();
         qDebug() << qPrintable(i.key()) << ": " << *i.value();
