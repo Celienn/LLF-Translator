@@ -19,46 +19,62 @@ LLFTranslator::~LLFTranslator()
 
 }
 
-void LLFTranslator::addVariable(const QString &var, int frequency)
+void LLFTranslator::readVar(Dataref* dataref, SIMCONNECT_DATATYPE type, function<void(double)> callback, int frequency){
+    if (!isConnected()) return;
+
+    DWORD definition = nextDefinitionId++;
+    dataref->definitionId = definition;
+    dataref->callback = [callback, this](SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData){
+        double* data = (double*)&pObjData->dwData;
+        callback(*data);
+    };
+    
+    variables[dataref->requestId] = dataref;
+
+    HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, dataref->MSFSvar, dataref->unit, type);
+    if (FAILED(hr)) {
+        qDebug() << "Failed to add to data definition : " << dataref->MSFSvar;
+    }
+    if (!timers.contains(frequency)) timers[frequency].start();
+    
+    SimConnect_RequestDataOnSimObject(hSimConnect, dataref->requestId, definition, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SIM_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+}
+
+void LLFTranslator::addVariable(const QString &var, int frequency, int id)
 {
-    string MFSvarStr = translateXPlaneToMFS(var).toStdString();
-    char* MFSvar = new char[MFSvarStr.length() + 1];
-    strcpy(MFSvar, MFSvarStr.c_str());
+    string MSFSvarStr = translateXPlaneToMFS(var).toStdString();
+    char* MSFSvar = new char[MSFSvarStr.length() + 1];
+    strcpy(MSFSvar, MSFSvarStr.c_str());
 
     string unitStr = getXPlaneUnit(var).toStdString();
     char* unit = new char[unitStr.length() + 1];
     strcpy(unit, unitStr.c_str());
     
-    Dataref* dataref = new Dataref(var, frequency, 0.0);
-    variables.append(dataref);
+    Dataref* dataref = new Dataref(var, frequency);
+    dataref->MSFSvar = MSFSvar;
+    dataref->unit = unit;
+    dataref->requestId = id;
 
-    if (MFSvarStr == "Not Found" || unitStr == "Not Found") return;
+    if (MSFSvarStr == "Not Found" || unitStr == "Not Found") return;
     qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
     
-    readVar<double>(MFSvar, unit, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
+    readVar(dataref, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
         dataref->value = applyEquation(dataref->name, value);
     }, frequency);
 }
 
-void LLFTranslator::removeVariable(const QString &var, int id)
+void LLFTranslator::removeVariable(int id)
 {
-    qDebug() << "Removing variable " << var << " with id " << id;
-    
-    for (int i = 0; i < variables.size(); i++) {
-        if (variables[i]->name == var) {
-            delete variables[i];
-            variables[i] = nullptr;
-            variables.removeAt(i);
-            break;
-        }
-    }
+    Dataref* dataref = variables.value(id);
+    if (dataref == nullptr) return;
 
-    callbacks.remove(id);
+    qDebug() << "Removing variable " << dataref->name << " with id " << id;
+
+    variables.remove(id);
 }
 
-// Merci Copilot :D
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext) {
-    LLFTranslator* translator = static_cast<LLFTranslator*>(pContext);
+    QHash<DWORD, Dataref*>* variables = static_cast<QHash<DWORD, Dataref*>*>(pContext);
     SIMCONNECT_RECV_EVENT *evt;
     SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData;
     SIMCONNECT_RECV_EXCEPTION *except;
@@ -77,10 +93,8 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
         case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
             pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*) pData;
             request = pObjData->dwRequestID;
-            if (translator->callbacks.count(request)) {
-                if (translator->callbacks[request] == nullptr) return;
-                translator->callbacks[request](pObjData);
-            }
+            if (!variables->contains(request) || variables->value(request) == nullptr) break;
+            variables->value(request)->callback(pObjData);
             break;
 
         case SIMCONNECT_RECV_ID_EXCEPTION:
@@ -101,7 +115,7 @@ void LLFTranslator::initSimReader()
 {
     QThread* thread = QThread::create([this] {
         while (connected) {
-            SimConnect_CallDispatch(hSimConnect, DispatchProcRD, this);
+            SimConnect_CallDispatch(hSimConnect, DispatchProcRD, &variables);
             QThread::msleep(1000/maxFrequency);
         }
     });
@@ -120,7 +134,7 @@ void LLFTranslator::initUdpWorker()
                 if (it.value().elapsed() >= 1000 / it.key()) {
                     it.value().restart();
 
-                    for (Dataref* variable : variables) {
+                    for (Dataref* variable : variables.values()) {
                         if (variable->frequency == it.key()) {
                             datagrams.append(QPair<QString, float>(variable->name, variable->value));
                         }
@@ -192,8 +206,8 @@ QString LLFTranslator::readCsvArg(QString dataref,int arg)
 void LLFTranslator::onDatagramReceived(char* dataref, int frequency, int id)
 {
     qDebug() << "frequency : " << frequency << " cond : " << (frequency <= 0);
-    if ( frequency <= 0 ) removeVariable(dataref, id);
-    else addVariable(QString(dataref), frequency);
+    if ( frequency <= 0 ) removeVariable(id);
+    else addVariable(QString(dataref), frequency, id);
 }
 
 // Ne prend pas en compte les priorités des opération
