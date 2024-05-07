@@ -71,6 +71,7 @@ void LLFTranslator::removeVariable(int id)
 
     w->Data->removeFromList(dataref->MSFSvar);
     w->Data->removePointer(dataref);
+    w->Data->initCollumn();
     variables.remove(id);
 }
 

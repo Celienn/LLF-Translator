@@ -9,6 +9,7 @@ GlobalData::GlobalData(Ui::MainWindow* parent)
 {
     Titles << "Name" << "Value" << "Unit" << "Frequency";
     this->parent = parent;
+    initCollumn();
 }
 
 void GlobalData::removeFromList(const char * key){
@@ -36,6 +37,8 @@ void GlobalData::setcase(int i , int row, QString text){
 // Todo : optimize :p
 void GlobalData::initData(QList<Dataref*> DListe){
     QTableWidgetItem *pCell = parent->Table->item(0, 0);
+    parent->Table->clearContents();
+    parent->Table->setRowCount(DListe.size()); 
 
     for (int i = 0; i < DListe.size(); ++i) {
 

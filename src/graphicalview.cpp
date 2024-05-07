@@ -178,7 +178,7 @@ void graphicalview::drawPoints(CircularBuffer* buffer,double xmin,double xmax,do
 
 void graphicalview::paintEvent(QPaintEvent *event)
 {
-    int maxvalue = buffer->getMax() * 1.2;
+    int maxvalue = 1 + buffer->getMax() * 1.2;
     repere(buffer->getSize(),1,1,maxvalue, 1,1);
     drawPoints(buffer,1,buffer->getSize(),1,maxvalue);
     update();

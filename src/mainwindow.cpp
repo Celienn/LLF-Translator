@@ -12,8 +12,6 @@ void MainWindow::init()
     ui->Table->setRowCount(23);
     ui->Table->setColumnCount(0);
     ui->Table->setColumnWidth(0,143);
-    //ui->Table->horizontalHeader()->hide();
-    //ui->Table->verticalHeader()->setVerticalHeaderLabels();
 
     QTableWidgetItem *pCell = ui->Table->item(0, 0);
     pCell = new QTableWidgetItem;
@@ -62,11 +60,4 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     
     graphicalview *GraphicalView = new graphicalview(this,itemname,ptr);
     GraphicalView->show();
-}
-
-
-void MainWindow::on_pushButton_clicked()
-{
-    GlobalData* Data = new GlobalData(ui);
-    Data->initCollumn();
 }

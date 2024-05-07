@@ -31,7 +31,6 @@ class MainWindow : public QMainWindow
         
     private slots:
         void on_listWidget_itemClicked(QListWidgetItem *item);
-        void on_pushButton_clicked();
 
     private:
         Ui::MainWindow *ui;
