@@ -55,7 +55,7 @@ void LLFTranslator::addVariable(const QString &var, int frequency, int id)
     qDebug() << "Adding variable " << var << "( " << translateXPlaneToMFS(var) << " ) " << " with frequency " << frequency << "Hz";
     
     w->Data->getParent()->listWidget->addItem(MSFSvar);
-    w->Data->addPointers(variables.values());
+    w->Data->addPointer(dataref);
 
     readVar(dataref, SIMCONNECT_DATATYPE_FLOAT64, [this,dataref](double value) {
         dataref->value = applyEquation(dataref->name, value);
@@ -70,6 +70,7 @@ void LLFTranslator::removeVariable(int id)
     qDebug() << "Removing variable " << dataref->name << " with id " << id;
 
     w->Data->removeFromList(dataref->MSFSvar);
+    w->Data->removePointer(dataref);
     variables.remove(id);
 }
 
@@ -222,7 +223,7 @@ double LLFTranslator::applyEquation(const QString& dataref,double value)
     double number = 0.0;
     char operation = '+';
 
-    while (ss >> number) {
+    while (ss >> number) { // Faire gaffe a pas faire des -value mais plûtot value*-1 quand la valeur peut être positive ou négative
         switch (operation) {
             case '+': result += number; break;
             case '-': result -= number; break;

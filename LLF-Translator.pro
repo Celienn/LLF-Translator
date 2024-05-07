@@ -16,7 +16,8 @@ SOURCES += \
     src/llftranslator.cpp \
     src/mainwindow.cpp \
     src/udpworker.cpp \
-    src/dataref.cpp
+    src/dataref.cpp \
+    src/circularbuffer.cpp
 
 HEADERS += \
     src/circularbuffer.h \

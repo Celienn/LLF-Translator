@@ -28,7 +28,7 @@ void graphicalview::mouseMoveEvent(QMouseEvent *event)
 
 void graphicalview::Timer_Timeout_Event_Slot()
 {
-    qDebug() << *vptr;
+    double var = 600.0;
     buffer->insertnewvalue(*vptr);
 }
 
@@ -100,11 +100,6 @@ void graphicalview::repere(double xmin,double xmax,double ymin,double ymax, doub
     double offsetX = (width()/(fabs(xmin)+fabs(xmax)))*fabs(xmin);
     double offsetY = (height()/(fabs(ymin)+fabs(ymax)))*fabs(ymax);
 
-    /*xamMoveTo(offsetX,0);
-    xamLineTo(offsetX,xamMaxY());
-
-    xamMoveTo(0,offsetY);
-    xamLineTo(xamMaxX(),offsetY);*/
     myline.drawLine(offsetX,0,offsetX,height());
     myline.drawLine(0,offsetY,width(),offsetY);
 
@@ -112,22 +107,16 @@ void graphicalview::repere(double xmin,double xmax,double ymin,double ymax, doub
     for (int i=0;i<gradx+1	;i++){
         if (i == fabs(xmin)*xpas) continue;
         float calc = (width()/gradx)*i;
-        //xamFilledRectangle( (calc)-1, (offsetY)-5,2, 10 ) ;
         myline.drawRect((calc)-1, (offsetY)-5,2, 10);
     }
 
     gradx = (fabs(xmin) + fabs(xmax));
     for (int i=0;i<gradx+1;i++){
         if (i == fabs(xmin)) continue;
-        //float calc = (width()/gradx)*i;
         if (abs(i)%1) continue;
         if (i == 0) continue;
         if(i == gradx)continue;
-        /*char txt[10];
-        sprintf(txt,"%i",(int)(i-fabs(p_axeX->min)));
-        xamTextOut( (calc)-5 , (offsetY)+10, txt );*/
     }
-    //xamTextOut( xamMaxX()-10 , (offsetY)+10, p_axeX->label );
 
 
     float grady = (fabs(ymin) + fabs(ymax))*ypas;
@@ -135,22 +124,16 @@ void graphicalview::repere(double xmin,double xmax,double ymin,double ymax, doub
     for (int i=0;i<grady+1	;i++){
         if (i == abs(ymin)*ypas) continue;
         float calc = (height()/grady)*i;
-        //xamFilledRectangle( offsetX-5, height()-(calc)-1,10, 2 ) ;
         myline.drawRect(offsetX-5, height()-(calc)-1,10, 2);
     }
 
     grady = (fabs(ymin) + fabs(ymax));
     for (int i=0;i<grady+1	;i++){
         if (i == abs(ymin)) continue;
-        //float calc = (height()/grady)*i;
         if (abs(i)%1) continue;
         if (i == 0) continue;
         if(i == grady)continue;
-        /*char txt[10];
-        sprintf(txt,"%i",(int)(i-fabs(p_axeY->min)));
-        xamTextOut( offsetX+10, xamMaxY()-(calc)-8, txt ) ;*/
     }
-    //xamTextOut( offsetX+10 , 10, p_axeY->label );
 }
 
 void graphicalview::drawCross(QPainter* painter, QPoint pos, int* value,int i)
@@ -180,40 +163,24 @@ void graphicalview::drawPoints(CircularBuffer* buffer,double xmin,double xmax,do
         int value = buffer->getValue(i);
         QPoint pos = QPoint(width()-gradx*(i+1)-5,(fabs(ymax)*grady)-grady * value-5);
         points << pos;
-        //double dist =  distance(mousepos,pos);
 
-        //qDebug() << abs(mousepos.x() - pos.x());
         if (abs(mousepos.x() - pos.x()) < gradx && !crossed){
-
-            /*myline.drawText(QPoint(pos.x()-7,pos.y()-10),QString::number(value));
-            myline.drawText(QPoint(pos.x()-5,pos.y()-24),QString::number(i));
-            myline.setPen(Qt::gray);
-            myline.drawLine(QPoint(0,pos.y()), QPoint(width(),pos.y())); // x axes
-            myline.drawLine(QPoint(pos.x(),0), QPoint(pos.x(),height())); // y axes*/
 
             drawCross(&paint, pos, &value, i);
             crossed = true; // s'assurer que la croix ne s'affiche qu'une seule fois
         }
-        //myline.drawRect(pos.x()-5,pos.y()-5,10,10);
-        //myline.drawEllipse(QRect(pos.x()-3,pos.y()-3, 6, 6));
 
-        //myline.setPen(Qt::green);
-
-        //if (i != 0) myline.drawLine(pos,lastpos) ;
         traceCourbe(paint, points);
         lastpos = pos;
     }
     traceCourbe(paint, points);
-    //qDebug() << points;
 }
 
 void graphicalview::paintEvent(QPaintEvent *event)
 {
-   int maxvalue = accumulatetest + (accumulatetest * 0.2);
-    //QPainter paint( this );
+    int maxvalue = buffer->getMax() * 1.2;
     repere(buffer->getSize(),1,1,maxvalue, 1,1);
     drawPoints(buffer,1,buffer->getSize(),1,maxvalue);
-    //drawCross(buffer,1,buffer->getSize(),1,maxvalue);
     update();
 
 }

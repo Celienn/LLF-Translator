@@ -1,42 +1,21 @@
 #ifndef CIRCULARBUFFER_H
 #define CIRCULARBUFFER_H
 
-#include <iostream>
-#include <vector>
+#include <QVector>
 
 class CircularBuffer {
-private:
-    int size;
-    std::vector<int> buffer;
-    int head;
+    private:
+        int size;
+        QVector<double> buffer;
+        int head;
+        double max = 0.;
 
-public:
-    CircularBuffer(int size) : size(size), buffer(size), head(0){}
-
-    void insertnewvalue(int newValue) {
-        // Insert the new value at the beginning
-        buffer.insert(buffer.begin(), newValue);
-        // Remove the last element
-        buffer.pop_back();
-    }
-
-
-    int getSize()
-    {
-        return buffer.size();
-    }
-
-    int getValue(int index)
-    {
-        return buffer[index];
-    }
-
-    void printBuffer() {
-        std::cout << "Current buffer: ";
-        for (int i = 0; i < size; ++i) {
-            std::cout << buffer[i] << " ";
-        }
-        std::cout << std::endl;
-    }
+    public:
+        CircularBuffer(int size) : size(size), buffer(size), head(0){};
+        void insertnewvalue(double newValue);
+        int getSize(){ return buffer.size(); };
+        int getValue(int index){ return buffer[index]; };
+        double getMax(){ return max; }
 };
+
 #endif // CIRCULARBUFFER_H

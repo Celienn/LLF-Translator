@@ -26,14 +26,6 @@ void GlobalData::removeFromList(const char * key){
     }
 }
 
-void GlobalData::addPointers(QList<Dataref*> DListe){
-    pts.clear();
-    for (Dataref* dataref : DListe) {
-       pts[dataref->MSFSvar] = &dataref->value;
-       qDebug() << &dataref->value;
-    }
-}
-
 void GlobalData::setcase(int i , int row, QString text){
     QTableWidgetItem *pCell = parent->Table->item(0, 0);
     pCell = new QTableWidgetItem;

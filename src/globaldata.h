@@ -18,10 +18,11 @@ class GlobalData {
         void initData(QList<Dataref*> DListe);
         void setcase(int i, int row, QString text);
         void removeFromList(const char * key);
-        void addPointers(QList<Dataref*> DListe);
-        QHash<QString, double*> getPointers(){ return pts; };
+        void addPointer    (Dataref* dataref) { pts[dataref->MSFSvar] = &dataref->value; };
+        void removePointer (Dataref* dataref) { pts.remove(dataref->MSFSvar); };
+        QHash<QString, double*> getPointers() { return pts; };
         Ui::MainWindow* getParent() { return parent; };
-
+        
     private:
         QStringList Titles;
         Ui::MainWindow* parent;

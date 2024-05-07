@@ -1,7 +1,7 @@
 sim/cockpit2/gauges/indicators/altitude_ft_pilot,PLANE ALTITUDE,Feet,value
 sim/cockpit2/gauges/indicators/vvi_fpm_pilot,VERTICAL SPEED,Feet per minute,value
-sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot,ATTITUDE INDICATOR BANK DEGREES,Degrees,-value
-sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot,ATTITUDE INDICATOR PITCH DEGREES,Degrees,value
+sim/cockpit2/gauges/indicators/roll_AHARS_deg_pilot,ATTITUDE INDICATOR BANK DEGREES,Degrees,value*-1
+sim/cockpit2/gauges/indicators/pitch_AHARS_deg_pilot,ATTITUDE INDICATOR PITCH DEGREES,Degrees,value*-1
 sim/cockpit2/clock_timer/local_time_hours,LOCAL TIME,Hours,-value%1+value
 sim/cockpit2/clock_timer/local_time_minutes,LOCAL TIME,Hours,value%1*60
 sim/flightmodel/engine/POINT_pitch_deg[0],GENERAL ENG THROTTLE LEVER POSITION:1,Percent over 100,value/0.1*1.15
