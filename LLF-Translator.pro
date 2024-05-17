@@ -17,7 +17,8 @@ SOURCES += \
     src/mainwindow.cpp \
     src/udpworker.cpp \
     src/dataref.cpp \
-    src/circularbuffer.cpp
+    src/circularbuffer.cpp \
+    src/qledlabel.cpp
 
 HEADERS += \
     src/circularbuffer.h \
@@ -26,7 +27,8 @@ HEADERS += \
     src/llftranslator.h \
     src/mainwindow.h \
     src/udpworker.h \
-    src/dataref.h 
+    src/dataref.h \
+    src/qledlabel.h
 
 FORMS += \
     src/graphicalview.ui \

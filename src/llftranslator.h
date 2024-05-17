@@ -17,6 +17,8 @@
 
 using namespace std;
 
+class MainWindow;
+
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
 class LLFTranslator : public QObject
@@ -28,7 +30,8 @@ class LLFTranslator : public QObject
         void addVariable(const QString &var, int frequency, int id);
         void removeVariable(int id);
         bool isConnected() { return connected; };
-        void connect();
+        bool connect();
+        bool disconnect();
         friend void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
         void readVar(Dataref* dataref, SIMCONNECT_DATATYPE type, function<void(double)> callback, int frequency);
         

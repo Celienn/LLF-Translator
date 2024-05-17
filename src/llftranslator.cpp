@@ -156,19 +156,36 @@ void LLFTranslator::initUdpWorker()
     udpWorker->init();
 }
 
-void LLFTranslator::connect() {
+bool LLFTranslator::connect() {
     if (SUCCEEDED(SimConnect_Open(&hSimConnect, "LLFTranslator", NULL, 0, 0, 0)))
     {
         connected = true;
-        qDebug() << "Connected to MFS!";
+        qInfo() << "Connected to MFS!";
         initSimReader();
         initUdpWorker();
+        return true;
     }
     else
     {
         connected = false;
-        qDebug() << "Failed to connect to MFS!";
+        qWarning() << "Failed to connect to MFS!";
+        return false;
     }
+}
+
+bool LLFTranslator::disconnect() {
+    if (isConnected()) {
+        if (SUCCEEDED(SimConnect_Close(hSimConnect))) {
+            connected = false;
+            qInfo() << "Disconnected from MFS!";
+            return true;
+        }
+        else {
+            qWarning() << "Failed to disconnect from MFS!";
+            return false;
+        }
+    }
+    return true;
 }
 
 QList<QString> LLFTranslator::loadConfig()
@@ -177,7 +194,7 @@ QList<QString> LLFTranslator::loadConfig()
     QFile file(":src/config.csv");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Impossible d'ouvrir le fichier : " << file.errorString();
+        qCritical() << "Impossible d'ouvrir le fichier : " << file.errorString();
         return list;
     }
 
@@ -208,7 +225,7 @@ QString LLFTranslator::readCsvArg(QString dataref,int arg)
 
 void LLFTranslator::onDatagramReceived(char* dataref, int frequency, int id)
 {
-    qDebug() << "frequency : " << frequency << " cond : " << (frequency <= 0);
+    if (!isConnected()) return;
     if ( frequency <= 0 ) removeVariable(id);
     else addVariable(QString(dataref), frequency, id);
 }

@@ -7,8 +7,10 @@
 #include <mainwindow.h>
 #include <QList>
 #include "ui_mainwindow.h"
-#include "dataref.h"
 #include <QStringList>
+#include "QTableWidgetItem"
+#include <QListWidget>
+#include "src/dataref.h"
 
 class GlobalData {
 

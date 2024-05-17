@@ -1,9 +1,4 @@
 #include "globaldata.h"
-#include <qdebug.h>
-#include "ui_mainwindow.h"
-#include "QTableWidgetItem"
-#include <QListWidget>
-#include "src/dataref.h"
 
 GlobalData::GlobalData(Ui::MainWindow* parent)
 {
