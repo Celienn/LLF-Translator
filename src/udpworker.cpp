@@ -73,12 +73,12 @@ QByteArray UDPWorker::generateDatagram(int id, float value, bool header)
 bool UDPWorker::parseRREFRequest(QByteArray datagram, int *frequency, int *id, char *rref)
 {
     if (datagram.size() < 13 || datagram.size() > 413){
-        qDebug() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
+        qWarning() << "Invalid datagram size : " << datagram.size() << " bytes. Expected between 13 and 412 bytes.";
         return false;
     }
 
     if (!datagram.startsWith("RREF")) {
-        qDebug() << "Invalid datagram : does not start with 'RREF'";
+        qWarning() << "Invalid datagram : does not start with 'RREF'";
         return false;
     }
 

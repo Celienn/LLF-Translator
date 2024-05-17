@@ -29,7 +29,7 @@ void LLFTranslator::readVar(Dataref* dataref, SIMCONNECT_DATATYPE type, function
 
     HRESULT hr = SimConnect_AddToDataDefinition(hSimConnect, definition, dataref->MSFSvar, dataref->unit, type);
     if (FAILED(hr)) {
-        qDebug() << "Failed to add to data definition : " << dataref->MSFSvar;
+        qCritical() << "Failed to add to data definition : " << dataref->MSFSvar;
     }
     if (!timers.contains(frequency)) timers[frequency].start();
     
@@ -101,7 +101,7 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
 
         case SIMCONNECT_RECV_ID_EXCEPTION:
             except = (SIMCONNECT_RECV_EXCEPTION*) pData;
-            qDebug() << "SimConnect exception: " << except->dwException;
+            qWarning() << "SimConnect exception: " << except->dwException;
             break;
 
         case SIMCONNECT_RECV_ID_QUIT:

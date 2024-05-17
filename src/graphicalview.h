@@ -19,8 +19,9 @@
 #define HAUTEURVUE 1000
 #define nbpoints 100
 #define RESOLUTION 10
-#define DELAY 50 // delay between  value asking.
+#define DELAY 50 
 
+// TODO : dynamic scale
 
 namespace Ui {
     class graphicalview;

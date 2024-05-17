@@ -21,6 +21,8 @@ class MainWindow;
 
 void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
 
+// TODO : Fix when connecting and disconnecting multiple times, variables are received multiple times
+
 class LLFTranslator : public QObject
 {
 
