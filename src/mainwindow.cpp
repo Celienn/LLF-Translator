@@ -29,8 +29,7 @@ void DebugOutput(QtMsgType type, const QMessageLogContext &context, const QStrin
         break;
     }
 
-    // Ajoutez le message à votre QTextEdit
-    g_mainWindow->ui->console->append(QString("<p style='color: %1'>%2</p>").arg(color, msg));
+    g_mainWindow->ui->console->append(QString("<span style='color: %1'>%2</span>").arg(color, msg));
 }
 
 
@@ -104,9 +103,9 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 void MainWindow::onConnectButtonClicked()
 {
     bool connected = m_LLFTranslator->isConnected();
-    bool succes = connected ? m_LLFTranslator->disconnect() : m_LLFTranslator->connect();
-    if (succes) {
-        ui->connectButton->setText(!connected ? "Connect" : "Disconnect");
-        ui->ledlabel->setState(!connected ? Red : Green);
+    bool success = connected ? m_LLFTranslator->disconnect() : m_LLFTranslator->connect();
+    if (success) {
+        ui->connectButton->setText(connected ? "Connect" : "Disconnect");
+        ui->ledlabel->setState(connected ? Red : Green);
     }
 }

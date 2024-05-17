@@ -15,6 +15,7 @@
 #include <QtGlobal>
 #include <qledlabel.h>
 #include <llftranslator.h>
+#include <QTextCursor>
 
 class LLFTranslator;
 class GlobalData;

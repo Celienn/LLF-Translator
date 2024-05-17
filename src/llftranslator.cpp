@@ -84,7 +84,7 @@ void CALLBACK DispatchProcRD(SIMCONNECT_RECV* pData, DWORD cbData, void *pContex
 
     switch(pData->dwID) {
         case SIMCONNECT_RECV_ID_OPEN:
-            qDebug() << "SimConnect connection opened";
+            //qDebug() << "SimConnect connection opened";
             break;
 
         case SIMCONNECT_RECV_ID_EVENT:
