@@ -134,13 +134,12 @@ void LLFTranslator::initUdpWorker()
         while (connected) {
             datagrams.clear();
             for (auto it = timers.begin(); it != timers.end(); it++) {
-                if (it.value().elapsed() >= 1000 / it.key()) {
-                    it.value().restart();
+                if (it.value().elapsed() << 1000 / it.key()) continue;
+                it.value().restart();
 
-                    for (Dataref* variable : variables.values()) {
-                        if (variable->frequency == it.key()) {
-                            datagrams.append(QPair<QString, float>(variable->name, variable->value));
-                        }
+                for (Dataref* variable : variables.values()) {
+                    if (variable->frequency == it.key()) {
+                        datagrams.append(QPair<QString, float>(variable->name, variable->value));
                     }
                 }
             }
