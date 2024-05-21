@@ -11,7 +11,6 @@
 #include <iostream>
 #include <QCoreApplication>
 #include <QHostAddress>
-#include <src/dataref.h>
 #include <QtGlobal>
 #include <qledlabel.h>
 #include <llftranslator.h>
