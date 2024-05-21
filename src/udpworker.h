@@ -6,14 +6,12 @@
 #include <QByteArray>
 #include <QObject>
 
-class LLFTranslator;
-
 class UDPWorker : public QObject
 {
     Q_OBJECT
 
     public:   
-        UDPWorker(LLFTranslator *llf = nullptr);
+        UDPWorker(QObject *parent = nullptr);
         ~UDPWorker();
         void init();
         void sendFrame(QString dataref, float value);
@@ -22,7 +20,7 @@ class UDPWorker : public QObject
         QUdpSocket *socket;
         QHostAddress dstAddr;
         quint16 dstPort;
-        LLFTranslator *parent;
+        QObject *parent;
         QHash<QString, int> datagramIdMap;
         QByteArray generateDatagram(int id, float value, bool header = true);
         
