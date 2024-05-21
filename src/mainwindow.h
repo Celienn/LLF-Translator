@@ -12,7 +12,6 @@
 #include <QCoreApplication>
 #include <QHostAddress>
 #include <QtGlobal>
-#include <qledlabel.h>
 #include <llftranslator.h>
 #include <QTextCursor>
 
