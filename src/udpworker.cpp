@@ -1,10 +1,10 @@
 #include "udpworker.h"
 
-UDPWorker::UDPWorker(LLFTranslator *llf)
+UDPWorker::UDPWorker(QObject *parent)
+: QObject(parent)
 {
-    socket = new QUdpSocket();
+    socket = new QUdpSocket(this);
     socket->bind(QHostAddress::Any, 49000);
-    parent = llf;
 }
 
 UDPWorker::~UDPWorker()
