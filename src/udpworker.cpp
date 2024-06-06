@@ -13,6 +13,13 @@ UDPWorker::~UDPWorker()
     delete socket;
 }
 
+/**
+ * @brief Initialise l'UDPWorker.
+ * 
+ * Cette méthode initialise le UDPWorker en connectant le socket à l'événement readyRead.
+ * Lorsque des données sont disponibles pour être lues à partir du socket, elle lit le datagramme,
+ * le parse avec parseRREFRequest et émet un signal datagramReceived afin que les données soit ensuite réceptioné par la classe principale.
+ */
 void UDPWorker::init()
 {
     if (parent == nullptr) return;
@@ -38,12 +45,27 @@ void UDPWorker::init()
     });
 }
 
+/**
+ * @brief Envoie une trame de réponse RREF.
+ * 
+ * @param dataref Le dataref dont la valeur doit être envoyée.
+ * @param value La valeur du dataref.
+ * 
+ * Permet d'envoyer un seul dataref par trame.
+ */
 void UDPWorker::sendFrame(QString dataref, float value)
 {
     QByteArray frame = generateDatagram(datagramIdMap[dataref], value);
     socket->writeDatagram(frame, dstAddr, dstPort);
 }
 
+/**
+ * @brief Envoie une trame de réponse RREF.
+ * 
+ * @param datagrams La liste des datarefs et valeurs à envoyer.
+ * 
+ * Permet d'envoyer plusieurs datarefs et valeurs en une seule trame.
+ */
 void UDPWorker::sendFrame(QList<QPair<QString, float>> datagrams)
 {
     if (datagrams.isEmpty()) return;
@@ -59,6 +81,14 @@ void UDPWorker::sendFrame(QList<QPair<QString, float>> datagrams)
     socket->writeDatagram(frame, dstAddr, dstPort);
 }
 
+/**
+ * @brief Génère un datagramme de réponse RREF.
+ * 
+ * @param id L'identifiant de la requête.
+ * @param value La valeur du dataref.
+ * @param header Si le datagramme generé doit contenir l'en-tête "RREF,".
+ * @return QByteArray Le datagramme généré.
+ */
 QByteArray UDPWorker::generateDatagram(int id, float value, bool header)
 {
     QByteArray frame;
@@ -69,7 +99,17 @@ QByteArray UDPWorker::generateDatagram(int id, float value, bool header)
     return frame;
 }
 
-
+/**
+ * @brief Parse une requête RREF.
+ * 
+ * @param datagram Le datagramme à parser.
+ * @param frequency Un pointer où sera stocker la fréquence lue.
+ * @param id Un pointer où sera stocker l'identifiant lue.
+ * @param rref Un pointer où sera stocker le dataref lue.
+ * 
+ * @return true Si le datagramme est valide.
+ * @return false Si le datagramme est invalide.
+ */
 bool UDPWorker::parseRREFRequest(QByteArray datagram, int *frequency, int *id, char *rref)
 {
     if (datagram.size() < 13 || datagram.size() > 413){
