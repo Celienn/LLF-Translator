@@ -8,4 +8,4 @@ This repository is public primarily to showcase the project in my portfolio — 
 
 # Additional info
 If you really want to undestand how the project work , you can read our project report. Keep in mind it's a student project and is in french.
-[Project Report](https://github.com/user-attachments/files/21111407/Rapport_de_projet_1790-11-4-annoter.pdf)
+[Project Report](https://github.com/user-attachments/files/24186578/Rapport_de_projet_1790-11-4-annoter.pdf)
